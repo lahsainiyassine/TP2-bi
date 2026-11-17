@@ -1,0 +1,51 @@
+code_magasin,nom_magasin,ville,région,pays,surface_m2,type_magasin,date_ouverture
+M001,Fès Commerce,Rabat,Oriental,Maroc,154,Supermarché,2014-03-02
+M002,Market El Fassi,Meknès,Souss-Massa,Maroc,1252,Supermarché,2006-05-10
+M003,Oujda Store,Oujda,Tanger-Tétouan-Al Hoceima,Maroc,517,Hypermarché,2021-02-05
+M004,Magasin Hassan II,Meknès,Rabat-Salé-Kénitra,Maroc,1021,Supermarché,2005-10-25
+M005,Super Rabat,Rabat,Tanger-Tétouan-Al Hoceima,Maroc,3865,Supermarché,2015-09-25
+M006,Magasin Hassan II,Tanger,Fès-Meknès,Maroc,4835,Hypermarché,2021-01-02
+M007,Fès Commerce,Casablanca,Fès-Meknès,Maroc,4753,Supermarché,2010-01-03
+M008,Boutique CasaStyle,Rabat,Marrakech-Safi,Maroc,2061,Boutique,2019-11-01
+M009,Fès Commerce,Casablanca,Tanger-Tétouan-Al Hoceima,Maroc,137,Supermarché,2013-06-11
+M010,Tech Marrakech,Laâyoune,Marrakech-Safi,Maroc,2542,Supermarché,2023-06-20
+M011,Laayoune Market,Oujda,Souss-Massa,Maroc,3225,Centre commercial,2013-10-07
+M012,Boutique CasaStyle,Tétouan,Marrakech-Safi,Maroc,3411,Centre commercial,2019-10-17
+M013,Laayoune Market,Tanger,Souss-Massa,Maroc,2311,Centre commercial,2011-07-01
+M014,Oujda Store,Rabat,Tanger-Tétouan-Al Hoceima,Maroc,1835,Supermarché,2013-05-13
+M015,Tanger Center,Rabat,Oriental,Maroc,2503,Boutique,2017-03-06
+M016,Laayoune Market,Meknès,Rabat-Salé-Kénitra,Maroc,2266,Boutique,2008-11-18
+M017,Market El Fassi,Marrakech,Rabat-Salé-Kénitra,Maroc,3387,Centre commercial,2008-09-14
+M018,Oujda Store,Casablanca,Fès-Meknès,Maroc,1838,Boutique,2021-03-08
+M019,Super Rabat,Oujda,Drâa-Tafilalet,Maroc,2851,Hypermarché,2007-04-08
+M020,Magasin Hassan II,Oujda,Rabat-Salé-Kénitra,Maroc,1278,Supermarché,2015-04-03
+M021,Market El Fassi,Laâyoune,Fès-Meknès,Maroc,2166,Hypermarché,2016-06-18
+M022,Boutique CasaStyle,Rabat,Drâa-Tafilalet,Maroc,1446,Hypermarché,2021-05-30
+M023,Boutique CasaStyle,Tétouan,Oriental,Maroc,2693,Hypermarché,2010-03-16
+M024,Market El Fassi,Casablanca,Grand Casablanca,Maroc,1466,Centre commercial,2019-12-04
+M025,Super Rabat,Casablanca,Tanger-Tétouan-Al Hoceima,Maroc,3505,Centre commercial,2012-06-10
+M026,Boutique CasaStyle,Agadir,Oriental,Maroc,3212,Boutique,2023-12-11
+M027,Market El Fassi,Marrakech,Fès-Meknès,Maroc,3183,Hypermarché,2008-11-23
+M028,Market El Fassi,Marrakech,Souss-Massa,Maroc,480,Centre commercial,2006-05-23
+M029,Super Rabat,Laâyoune,Oriental,Maroc,1638,Supermarché,2019-02-09
+M030,Fès Commerce,Tanger,Oriental,Maroc,844,Supermarché,2016-08-30
+M031,Tanger Center,Agadir,Drâa-Tafilalet,Maroc,4841,Hypermarché,2020-10-05
+M032,Agadir Shop,Oujda,Fès-Meknès,Maroc,4762,Centre commercial,2023-11-30
+M033,Market El Fassi,Marrakech,Rabat-Salé-Kénitra,Maroc,1903,Supermarché,2021-06-09
+M034,Oujda Store,Tanger,Oriental,Maroc,715,Centre commercial,2016-08-03
+M035,Market El Fassi,Meknès,Souss-Massa,Maroc,3849,Centre commercial,2010-11-28
+M036,Super Rabat,Laâyoune,Tanger-Tétouan-Al Hoceima,Maroc,3837,Supermarché,2020-01-26
+M037,Magasin Hassan II,Tanger,Oriental,Maroc,324,Boutique,2021-11-20
+M038,Tech Marrakech,Tanger,Rabat-Salé-Kénitra,Maroc,2125,Boutique,2017-01-19
+M039,Tech Marrakech,Rabat,Fès-Meknès,Maroc,3501,Supermarché,2007-10-06
+M040,Laayoune Market,Fès,Drâa-Tafilalet,Maroc,1560,Centre commercial,2023-06-12
+M041,Laayoune Market,Agadir,Oriental,Maroc,1764,Centre commercial,2009-10-13
+M042,Laayoune Market,Meknès,Fès-Meknès,Maroc,1565,Centre commercial,2014-08-06
+M043,Magasin Hassan II,Rabat,Fès-Meknès,Maroc,4857,Hypermarché,2013-01-05
+M044,Tanger Center,Casablanca,Marrakech-Safi,Maroc,1589,Hypermarché,2020-12-17
+M045,Magasin Hassan II,Rabat,Tanger-Tétouan-Al Hoceima,Maroc,1528,Boutique,2009-11-11
+M046,Oujda Store,Fès,Drâa-Tafilalet,Maroc,1054,Boutique,2013-07-13
+M047,Market El Fassi,Tétouan,Rabat-Salé-Kénitra,Maroc,4902,Centre commercial,2010-01-21
+M048,Super Rabat,Marrakech,Tanger-Tétouan-Al Hoceima,Maroc,184,Boutique,2013-09-05
+M049,Laayoune Market,Laâyoune,Rabat-Salé-Kénitra,Maroc,3781,Supermarché,2017-05-26
+M050,Agadir Shop,Tétouan,Grand Casablanca,Maroc,1136,Hypermarché,2017-01-27

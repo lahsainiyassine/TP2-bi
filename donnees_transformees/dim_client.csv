@@ -1,0 +1,52 @@
+id_client_sk,code_client,nom,prenom,nom_complet,ville,email,segment_marketing,date_inscription,points_fidelite,type_carte
+1,C_INCONNU,Inconnu,Inconnu,Client Inconnu,Non spécifiée,inconnu@entreprise.com,Standard,2000-01-01,0,Standard
+2,C001,Lahlou,Hicham,Rania El Amrani,Tanger,nadia.lahlou@example.com,VIP,2024-06-24,74,Gold
+3,C002,Chraibi,Omar,Karim Chraibi,Fès,karim.berrada@example.com,VIP,2021-09-04,222,Platinum
+4,C003,Zouhair,Youssef,Nadia Zouhair,Rabat,omar.lahlou@example.com,Premium,2024-10-05,99,Gold
+5,C004,Chraibi,Nadia,Hicham Chraibi,Agadir,omar.fassi@example.com,Standard,2021-08-05,236,Gold
+6,C005,Haddad,Rania,Karim Lahlou,Agadir,salma.chraibi@example.com,VIP,2022-05-21,365,Gold
+7,C006,Lahlou,Ayoub,Karim Chraibi,Marrakech,youssef.zouhair@example.com,Standard,2021-11-18,369,Silver
+8,C007,Berrada,Rania,Hicham Zouhair,Tanger,hicham.el amrani@example.com,VIP,2020-05-01,144,Platinum
+9,C008,Zouhair,Imane,Rania Berrada,Agadir,nadia.berrada@example.com,VIP,2021-02-05,234,Gold
+10,C009,Chraibi,Ayoub,Sara El Amrani,Marrakech,sara.fassi@example.com,Premium,2020-07-05,97,Silver
+11,C010,Zouhair,Nadia,Ayoub El Amrani,Rabat,rania.zouhair@example.com,Standard,2022-10-28,159,Silver
+12,C011,El Amrani,Nadia,Karim El Amrani,Tanger,hicham.lahlou@example.com,Standard,2022-05-22,346,Platinum
+13,C012,Haddad,Salma,Salma Berrada,Agadir,youssef.rami@example.com,VIP,2023-08-24,454,Silver
+14,C013,Rami,Rania,Rania El Amrani,Marrakech,hicham.benali@example.com,VIP,2022-10-11,462,Platinum
+15,C014,Essafi,Hicham,Omar Zouhair,Tanger,rania.berrada@example.com,Standard,2024-01-18,77,Silver
+16,C015,Berrada,Imane,Omar Essafi,Casablanca,omar.haddad@example.com,VIP,2023-12-13,368,Silver
+17,C016,Berrada,Karim,Youssef Rami,Fès,rania.haddad@example.com,Standard,2022-06-24,491,Silver
+18,C017,Haddad,Imane,Rania El Amrani,Tanger,karim.zouhair@example.com,VIP,2024-05-27,370,Gold
+19,C018,Fassi,Salma,Rania Chraibi,Marrakech,nadia.fassi@example.com,Premium,2022-02-09,84,Gold
+20,C019,Benali,Sara,Hicham Rami,Agadir,karim.zouhair@example.com,VIP,2023-03-29,272,Gold
+21,C020,Rami,Ayoub,Imane Benali,Tanger,imane.rami@example.com,Premium,2020-08-28,351,Gold
+22,C021,Berrada,Salma,Youssef Rami,Marrakech,imane.haddad@example.com,Premium,2020-09-03,246,Gold
+23,C022,Zouhair,Omar,Sara Rami,Marrakech,sara.fassi@example.com,VIP,2020-04-03,343,Platinum
+24,C023,El Amrani,Imane,Youssef Lahlou,Tanger,ayoub.benali@example.com,Standard,2024-04-19,450,Silver
+25,C024,Chraibi,Hicham,Karim Chraibi,Fès,salma.berrada@example.com,VIP,2022-08-08,403,Gold
+26,C025,Benali,Imane,Omar Rami,Fès,salma.zouhair@example.com,Premium,2020-07-07,107,Platinum
+27,C026,Fassi,Youssef,Karim Chraibi,Tanger,rania.essafi@example.com,Standard,2020-09-25,60,Silver
+28,C027,Chraibi,Salma,Imane Lahlou,Rabat,sara.berrada@example.com,VIP,2022-02-09,471,Platinum
+29,C028,El Amrani,Salma,Imane Chraibi,Rabat,rania.rami@example.com,Premium,2021-05-27,302,Platinum
+30,C029,Haddad,Karim,Rania Zouhair,Casablanca,salma.essafi@example.com,VIP,2024-01-21,451,Gold
+31,C030,Benali,Nadia,Rania Haddad,Tanger,hicham.fassi@example.com,VIP,2024-01-25,50,Silver
+32,C031,Rami,Nadia,Sara Berrada,Fès,sara.rami@example.com,VIP,2021-07-13,264,Platinum
+33,C032,Fassi,Nadia,Salma Berrada,Tanger,salma.essafi@example.com,Standard,2023-11-21,425,Gold
+34,C033,El Amrani,Youssef,Imane Fassi,Rabat,karim.el amrani@example.com,Standard,2023-07-31,250,Platinum
+35,C034,Haddad,Ayoub,Imane Essafi,Agadir,sara.chraibi@example.com,Premium,2024-07-25,370,Silver
+36,C035,Essafi,Nadia,Imane Haddad,Tanger,rania.el amrani@example.com,Standard,2023-11-24,366,Platinum
+37,C036,Essafi,Nadia,Ayoub Berrada,Casablanca,ayoub.rami@example.com,Premium,2024-07-26,443,Platinum
+38,C037,Essafi,Hicham,Sara Essafi,Tanger,salma.essafi@example.com,Standard,2024-03-23,405,Gold
+39,C038,Essafi,Omar,Imane El Amrani,Tanger,omar.chraibi@example.com,Standard,2024-08-13,258,Gold
+40,C039,Benali,Rania,Karim Lahlou,Casablanca,salma.essafi@example.com,VIP,2020-04-28,458,Platinum
+41,C040,Fassi,Nadia,Rania Zouhair,Casablanca,salma.berrada@example.com,VIP,2024-04-29,388,Gold
+42,C041,Benali,Salma,Ayoub Benali,Casablanca,hicham.essafi@example.com,Standard,2021-03-06,94,Gold
+43,C042,Essafi,Sara,Sara Chraibi,Fès,hicham.lahlou@example.com,Standard,2020-09-19,420,Silver
+44,C043,Essafi,Salma,Salma Rami,Tanger,ayoub.rami@example.com,Standard,2024-08-23,333,Gold
+45,C044,Chraibi,Nadia,Hicham Rami,Marrakech,karim.lahlou@example.com,VIP,2024-07-28,84,Gold
+46,C045,Berrada,Ayoub,Salma Fassi,Tanger,nadia.el amrani@example.com,Standard,2024-10-15,310,Platinum
+47,C046,Chraibi,Nadia,Ayoub Lahlou,Casablanca,imane.berrada@example.com,Premium,2024-03-13,123,Platinum
+48,C047,El Amrani,Imane,Imane El Amrani,Casablanca,youssef.rami@example.com,VIP,2023-03-02,313,Platinum
+49,C048,Fassi,Salma,Karim Essafi,Fès,ayoub.essafi@example.com,Premium,2023-10-09,276,Silver
+50,C049,Essafi,Youssef,Rania Zouhair,Marrakech,karim.lahlou@example.com,Standard,2021-04-12,260,Gold
+51,C050,Berrada,Sara,Nadia Chraibi,Agadir,nadia.chraibi@example.com,Standard,2022-10-10,111,Gold

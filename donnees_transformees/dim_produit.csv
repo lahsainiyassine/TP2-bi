@@ -1,0 +1,52 @@
+id_produit_sk,code_produit,nom_produit,categorie,sous_categorie,marque,prix_achat,prix_vente,fournisseur,pays_fournisseur,delai_livraison_jours,cout_transport,statut
+1,P_INCONNU,Produit Inconnu,Non catégorisé,Non catégorisé,Générique,0.0,0.0,Inconnu,Inconnu,0,0.0,Inactif
+2,P001,Montre Connectée,Accessoires,Audio,VisionX,476.61,825.57,Fournitech,Espagne,13,131.78,Actif
+3,P002,Smartphone X,Accessoires,Stockage,PrintMax,109.11,230.14,DistribPro,Maroc,6,166.33,Actif
+4,P003,Imprimante Jet,Accessoires,Stockage,UltraGear,1509.59,586.64,ElectroMaroc,France,2,176.53,Actif
+5,P004,Casque Audio,Électronique,Ordinateurs,PrintMax,1769.67,412.05,Fournitech,Chine,11,239.21,Actif
+6,P005,Clavier Mécanique,Informatique,Périphériques,PrintMax,986.74,1318.28,Fournitech,Espagne,3,169.54,Actif
+7,P006,Tablette Z,Informatique,Ordinateurs,SmartTech,1963.5,223.45,DistribPro,Maroc,8,68.31,Actif
+8,P007,Laptop Pro,Informatique,Audio,PrintMax,1921.16,1954.3,DataSource,France,12,277.28,Actif
+9,P008,Laptop Pro,Informatique,Périphériques,TechPro,342.13,1612.35,ElectroMaroc,Maroc,10,131.97,Actif
+10,P009,Disque SSD,Informatique,Périphériques,UltraGear,1562.37,1290.36,MegaSupply,Chine,12,188.11,Actif
+11,P010,Montre Connectée,Informatique,Ordinateurs,VisionX,877.75,1212.91,DistribPro,Chine,13,59.34,Actif
+12,P011,Montre Connectée,Électronique,Ordinateurs,PrintMax,1023.89,453.02,Fournitech,Maroc,6,111.89,Inactif
+13,P012,Smartphone X,Électronique,Téléphones,PrintMax,406.43,1924.92,TechImport,Italie,8,234.98,Inactif
+14,P013,Laptop Pro,Informatique,Ordinateurs,UltraGear,1700.33,1669.08,TechImport,Allemagne,10,113.36,Inactif
+15,P014,Casque Audio,Informatique,Périphériques,SmartTech,321.78,576.27,TechImport,Maroc,10,87.87,Actif
+16,P015,Tablette Z,Électronique,Téléphones,UltraGear,1070.98,1962.77,TechImport,Maroc,9,287.1,Inactif
+17,P016,Imprimante Jet,Informatique,Audio,VisionX,1409.26,1824.71,DataSource,Italie,11,236.39,Actif
+18,P017,Imprimante Jet,Informatique,Audio,SmartTech,1099.39,2081.87,MegaSupply,France,4,78.07,Actif
+19,P018,Disque SSD,Accessoires,Ordinateurs,VisionX,256.33,2146.16,MegaSupply,Allemagne,6,271.66,Inactif
+20,P019,Smartphone X,Informatique,Ordinateurs,VisionX,1810.2,956.77,DistribPro,Maroc,12,268.91,Inactif
+21,P020,Souris Sans Fil,Informatique,Ordinateurs,VisionX,1489.35,2046.29,TechImport,Espagne,8,87.92,Inactif
+22,P021,Disque SSD,Électronique,Téléphones,DataLink,883.5,593.17,DataSource,Chine,12,123.23,Actif
+23,P022,Disque SSD,Électronique,Stockage,SmartTech,547.47,2071.97,MegaSupply,Maroc,15,276.08,Inactif
+24,P023,Tablette Z,Électronique,Périphériques,DataLink,1607.15,1614.02,TechImport,Italie,3,179.31,Actif
+25,P024,Montre Connectée,Électronique,Périphériques,TechPro,1090.56,1354.16,ElectroMaroc,Chine,14,84.82,Actif
+26,P025,Montre Connectée,Accessoires,Ordinateurs,TechPro,340.37,2175.85,Fournitech,Chine,13,269.69,Inactif
+27,P026,Laptop Pro,Accessoires,Périphériques,TechPro,220.36,2263.11,Fournitech,Italie,2,159.61,Inactif
+28,P027,Écran HD,Électronique,Audio,PrintMax,1905.23,1967.51,MegaSupply,Chine,9,181.06,Inactif
+29,P028,Imprimante Jet,Électronique,Téléphones,SmartTech,1918.26,1596.06,MegaSupply,Maroc,5,137.08,Actif
+30,P029,Tablette Z,Électronique,Périphériques,DataLink,1206.0,2364.52,DistribPro,Chine,12,50.38,Actif
+31,P030,Smartphone X,Électronique,Périphériques,TechPro,1984.56,1771.78,MegaSupply,Italie,11,53.22,Actif
+32,P031,Montre Connectée,Informatique,Téléphones,UltraGear,437.88,2080.65,DataSource,Espagne,6,61.9,Inactif
+33,P032,Tablette Z,Électronique,Stockage,MegaSound,116.58,2035.28,ElectroMaroc,Maroc,8,237.5,Inactif
+34,P033,Tablette Z,Informatique,Téléphones,DataLink,503.2,1060.73,MegaSupply,France,6,135.71,Actif
+35,P034,Souris Sans Fil,Accessoires,Stockage,DataLink,106.12,2350.32,DataSource,Allemagne,7,128.39,Inactif
+36,P035,Smartphone X,Électronique,Téléphones,SmartTech,664.5,612.45,Fournitech,France,15,114.19,Actif
+37,P036,Laptop Pro,Informatique,Audio,PrintMax,568.69,1292.27,MegaSupply,France,3,227.3,Inactif
+38,P037,Laptop Pro,Accessoires,Ordinateurs,VisionX,280.84,2145.63,DistribPro,Chine,10,222.27,Inactif
+39,P038,Montre Connectée,Accessoires,Stockage,SmartTech,1628.6,373.44,DataSource,Maroc,3,160.37,Inactif
+40,P039,Smartphone X,Informatique,Téléphones,VisionX,1517.89,1586.71,MegaSupply,Maroc,7,109.23,Inactif
+41,P040,Écran HD,Électronique,Périphériques,PrintMax,479.35,2185.31,ElectroMaroc,Chine,15,94.63,Actif
+42,P041,Disque SSD,Accessoires,Ordinateurs,VisionX,1266.65,2444.93,Fournitech,Chine,15,148.07,Actif
+43,P042,Souris Sans Fil,Accessoires,Ordinateurs,UltraGear,1240.14,1698.96,DataSource,Italie,8,103.79,Actif
+44,P043,Clavier Mécanique,Accessoires,Stockage,SmartTech,1188.88,685.96,DistribPro,Maroc,3,223.53,Actif
+45,P044,Tablette Z,Informatique,Périphériques,VisionX,537.7,865.15,MegaSupply,Chine,3,241.99,Inactif
+46,P045,Imprimante Jet,Informatique,Audio,SmartTech,1335.41,908.15,TechImport,Italie,13,131.12,Actif
+47,P046,Clavier Mécanique,Informatique,Périphériques,UltraGear,1204.2,602.39,MegaSupply,Espagne,15,141.73,Inactif
+48,P047,Disque SSD,Informatique,Stockage,SmartTech,913.34,693.82,ElectroMaroc,Allemagne,11,255.44,Actif
+49,P048,Clavier Mécanique,Informatique,Audio,MegaSound,323.36,539.92,Fournitech,Espagne,8,93.69,Actif
+50,P049,Laptop Pro,Électronique,Ordinateurs,UltraGear,1703.17,2002.8,Fournitech,Maroc,14,280.14,Actif
+51,P050,Montre Connectée,Électronique,Stockage,MegaSound,355.06,2444.79,MegaSupply,France,10,117.72,Inactif
