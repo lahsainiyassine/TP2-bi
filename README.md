@@ -1,13 +1,6 @@
 # Projet Business Intelligence : Conception et Alimentation d'un Data Warehouse Decisionnel
 
-**Auteur :** LAHSAINI Yassine  
-**Formation :** Master Technologie Educative Emergente (TEE) - Semestre 3  
-**Etablissement :** Ecole Normale Superieure de Marrakech (ENS Marrakech) - Universite Cadi Ayyad  
-**Module :** Business Intelligence & Data Warehousing  
-**Enseignante :** Pr. Oumaima STITINI  
-**Annee universitaire :** 2026-2027  
 
----
 
 ## 1. Description du Projet
 
