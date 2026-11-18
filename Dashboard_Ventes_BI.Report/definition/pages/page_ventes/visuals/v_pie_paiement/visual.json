@@ -1,0 +1,62 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "v_pie_paiement",
+  "position": {
+    "x": 980,
+    "y": 310,
+    "z": 6000,
+    "height": 420,
+    "width": 900,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "pieChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_ventes"
+                    }
+                  },
+                  "Property": "mode_paiement"
+                }
+              },
+              "queryRef": "fait_ventes.mode_paiement",
+              "nativeQueryRef": "Mode de Paiement",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fait_ventes"
+                        }
+                      },
+                      "Property": "montant_total"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fait_ventes.montant_total)",
+              "nativeQueryRef": "Chiffre d'Affaires"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
