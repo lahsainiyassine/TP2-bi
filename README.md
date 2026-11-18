@@ -11,17 +11,17 @@
 
 ## 1. Description du Projet
 
-Ce projet porte sur la conception, l'alimentation et l'exploitation analytique d'un Data Warehouse decisionnel pour une grande entreprise commerciale de distribution.
+Ce projet porte sur la conception, l'alimentation et l'exploitation analytique d'un Data Warehouse decisionnel pour une entreprise de distribution commerciale.
 
-L'entreprise fait face au cloisonnement fonctionnel de ses donnees : les informations relatives aux clients, au catalogue des produits, au reseau des magasins physiques et aux transactions de vente sont stockees dans plusieurs systemes operationnels et sur des supports heterogenes (classeurs Excel, fichiers CSV et structures XML).
+L'entreprise fait face au cloisonnement fonctionnel de ses donnees : les informations relatives aux clients, au catalogue des articles, au reseau des points de vente et aux transactions de caisse sont stockees dans plusieurs systemes operationnels et sur des supports heterogenes (classeurs Excel, fichiers plats CSV et documents hierarchiques XML).
 
-L'objectif est d'extraire, nettoyer, harmoniser et integrer l'ensemble de ces donnees dans un entrepot de donnees unifie (`dwh_ventes`) organise en schema en etoile sous **MySQL / MariaDB**, grace a des pipelines ETL developpes avec **Talaxie Open Studio for Data Integration (v8.9)**.
+L'objectif est d'extraire, harmoniser, dedupliquer et integrer l'ensemble de ces donnees dans un entrepot de donnees unifie (`dwh_ventes`) organise en schema en etoile sous **MySQL / MariaDB**, grace a des pipelines ETL modulaires et robustes developpes sous **Talaxie Open Studio for Data Integration (v8.9)**.
 
 ---
 
 ## 2. Architecture du Data Warehouse (Schema en Etoile)
 
-Le Data Warehouse repose sur une modelisation multidimensionnelle en etoile. Cette structure separe clairement les indicateurs quantitatifs d'activite (faits) des contextes d'analyse (dimensions), garantissant une excellente performance sur les requetes analytiques et les agragations OLAP.
+Le Data Warehouse repose sur une modelisation multidimensionnelle en schema en etoile. Cette structure separe clairement les indicateurs quantitatifs d'activite (faits) des contextes d'analyse (dimensions), garantissant une excellente performance sur les requetes analytiques et les agragations OLAP.
 
 ### 2.1 Table de Faits : `fait_ventes`
 Table centrale stockant l'historique de chaque transaction commerciale avec ses mesures et ses cles etrangeres de reference :
@@ -33,17 +33,17 @@ Table centrale stockant l'historique de chaque transaction commerciale avec ses 
 * `id_temps_fk` : Cle temporelle format numerique compact `yyyyMMdd` (`dim_temps.id_temps`).
 * `quantite_vendue` : Volume d'articles achetes (INT).
 * `prix_unitaire` : Prix de vente unitaire applique (DECIMAL 10,2).
-* `montant_total` : Montant total de la vente calcule (`quantite * prix_unitaire`, DECIMAL 12,2).
+* `montant_total` : Montant total calcule (`quantite * prix_unitaire`, DECIMAL 12,2).
 * `mode_paiement` : Modalite de reglement (Carte bancaire, Cheque, Paiement mobile, Virement, Especes).
 
 ### 2.2 Tables de Dimensions
-1. **`dim_client`** : Decrit le profil des clients (code client, nom, prenom, nom complet concatene, ville, email, segment marketing, date d'inscription, points fidelite, type de carte).
-2. **`dim_produit`** : Decrit le referentiel catalogue des articles (code produit, libelle, categorie, sous-categorie, marque, prix d'achat, prix de vente, fournisseur, statut).
-3. **`dim_magasin`** : Decrit les points de vente physiques (code magasin, nom, ville, region geographique, pays, surface en m2, date d'ouverture, chiffre d'affaires annuel moyen).
+1. **`dim_client`** : Decrit le profil des clients (code client, nom, prenom, nom complet, ville, email, segment marketing, date inscription, points fidelite, type de carte).
+2. **`dim_produit`** : Decrit le referentiel catalogue des articles (code produit, nom produit, categorie, sous-categorie, marque, prix achat, prix vente, fournisseur, pays fournisseur, statut).
+3. **`dim_magasin`** : Decrit les points de vente physiques (code magasin, nom magasin, ville, region geographique, pays, surface m2, date ouverture, chiffre d'affaires annuel moyen, effectif).
 4. **`dim_temps`** : Decrit les granularites temporelles pour la navigation calendaire (id_temps, date complete, jour, mois, nom du mois, trimestre, annee, semestre, jour de la semaine, annee universitaire).
 
 ### 2.3 Gestion de l'Integrite Referentielle et des Lignes Inconnues
-Afin d'eviter tout echec lors du chargement des ventes en cas de code client, produit ou magasin absent des dimensions sources (donnees orphelines), chaque dimension intègre une ligne par defaut avec la cle de substitution `1` (`C_INCONNU`, `P_INCONNU`, `M_INCONNU`). Lors du mapping ETL, toute cle source non resolue est automatiquement dirigee vers cette cle `1`.
+Afin d'eviter tout echec lors du chargement des ventes en cas de reference absente des dimensions sources (donnees orphelines), chaque dimension integre une ligne par defaut avec la cle de substitution `1` (`C_INCONNU`, `P_INCONNU`, `M_INCONNU`). Lors du mapping ETL, toute cle source non resolue est automatiquement dirigee vers cette cle `1`.
 
 ---
 
@@ -59,59 +59,75 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
 ## 4. Details et Execution des Jobs ETL
 
 ### 4.1 Job 1 : Alimentation de la Dimension Client (`Job_Dim_Client_Ventes`)
-* **Role :** Extraction des donnees du classeur `clients_base.xlsx`, enrichissement dans `tMap_1` (generation du nom complet, affectation des segments), puis chargement dans la table `dim_client`.
-* **Action MySQL :** `INSERT_OR_UPDATE` sur la cle metier `code_client`.
+* **Architecture multi-sources :**
+  * Double extraction d'identifiants : `Codes clients Excel` (branche haute) et `Clients dans ventes` (branche basse).
+  * Unification et deduplication : `Rassembler codes` (`tUnite`, 100 lignes traitees) puis `Codes uniques` (`tUniqRow`).
+  * 3 Lookups convergents dans `Relier clients` (`tMap`) : `Base clients` (Excel), `Clients web CSV` (CSV) et `Fidelite XML` (XML parse avec le moteur Dom4j).
+  * Sortie : Chargement dans `dim_client` sous MySQL avec mapping de la cle de substitution `id_client_sk`.
 
 ![Design Job Client](./images/job_dim_client_design.png)
-*Figure 2 : Conception du flux ETL pour la dimension Client.*
+*Figure 2 : Conception du flux ETL pour la dimension Client (Modele exact de l'enseignant).*
 
-![Execution Job Client](./images/job_dim_client_exec.png)
-*Figure 3 : Execution reussie avec 50 enregistrements charges (Code de sortie = 0).*
+![Execution Job Client](./images/job_dim_client_exec.jpg)
+*Figure 3 : Execution reussie avec 100 lignes traitees et lookups resolus (Code de sortie = 0).*
 
 ---
 
 ### 4.2 Job 2 : Alimentation de la Dimension Produit (`Job_Dim_Produit_Ventes`)
-* **Role :** Extraction du catalogue articles a partir de `produits_catalogue.xlsx`, validation des types numeriques (prix d'achat et de vente) dans `tMap_1`, puis alimentation de `dim_produit`.
-* **Action MySQL :** `INSERT_OR_UPDATE` sur la cle `code_produit`.
+* **Architecture :**
+  * Unification des codes articles : `Codes du catalogue` (Excel) et `Produits dans ventes` (Excel) diriges vers `Reunir codes` (`tUnite`).
+  * Deduplication : `Codes uniques` (`tUniqRow`) assurant l'unicite absolue des articles.
+  * Lookups croises : `Lier produits` (`tMap`) joint `Details catalogue` (Excel) et `Fournisseurs CSV` (CSV) pour adjoindre fournisseur, pays, delai et cout de transport.
+  * Sortie : Ecriture dans `dim_produit` sous MySQL.
 
 ![Design Job Produit](./images/job_dim_produit_design.png)
 *Figure 4 : Conception du flux ETL pour la dimension Produit.*
 
 ![Execution Job Produit](./images/job_dim_produit_exec.jpg)
-*Figure 5 : Execution reussie avec 50 enregistrements charges (Code de sortie = 0).*
+*Figure 5 : Execution reussie avec 100 lignes traitees (Code de sortie = 0).*
 
 ---
 
 ### 4.3 Job 3 : Alimentation de la Dimension Magasin (`Job_Dim_Magasin_Ventes`)
-* **Role :** Integration des points de vente physiques depuis `magasins_ventes.xlsx`, structuration des localisations geographiques (ville, region, pays) et ecriture dans `dim_magasin`.
-* **Action MySQL :** `INSERT_OR_UPDATE` sur la cle `code_magasin`.
+* **Architecture :**
+  * Flux principal : `Localisation CSV` (`magasins_localisation (2).csv`) apportant coordonnees geographiques (ville, region, pays).
+  * Lookup de gestion : `Gestoin magasins Excel` (`magasins_ventes (1).xlsx`) apportant surface, CA annuel, effectif et date d'ouverture.
+  * Mapping et sortie : `Lier magasins` (`tMap`) consolide les attributs et alimente `dim_magasin` sous MySQL.
 
 ![Design Job Magasin](./images/job_dim_magasin_design.png)
-*Figure 6 : Conception du flux ETL pour la dimension Magasin.*
+*Figure 6 : Conception du flux pour la dimension Magasin.*
 
 ![Execution Job Magasin](./images/job_dim_magasin_exec.jpg)
-*Figure 7 : Execution reussie avec 50 enregistrements charges (Code de sortie = 0).*
+*Figure 7 : Execution reussie avec 50 magasins charges (Code de sortie = 0).*
 
 ---
 
-### 4.4 Job 4 : Alimentation et Deduplication de la Dimension Temps (`Job_Dim_Temps_Ventes`)
-* **Role :** Extraction des dates de ventes depuis `ventes_synthese.xlsx`, calcul par routines Talend de la cle temporelle numerique `id_temps` (`yyyyMMdd`), extraction du jour, mois, trimestre, annee, elimination absolue des doublons temporels avec le composant `tUniqRow_1`, et insertion dans `dim_temps`.
-* **Deduplication :** Les 50 lignes lues en entree sont filtrees en 49 dates distinctes uniques.
+### 4.4 Job 4 : Dimension Temps Multi-Sources (`Job_Dim_Temps_Ventes`)
+* **Architecture :**
+  * 5 sources d'evenements temporels : `Clients Excel` (date inscription), `Clients web` (premier achat), `Catalogue Excel` (date insertion produit), `Magasins CSV` (date ouverture) et `Ventes Excel` (date vente).
+  * Normalisation : 5 composants `tMap` projettent le format Date standardise.
+  * Agregation et deduplication : `Reunir dates` (`tUnite`, 250 dates lues) puis `Dates uniques` (`tUniqRow`, 240 dates uniques filtrees).
+  * Calendrier complet : `Mois et trimestre` (`tMap`) decompte `jour`, `mois`, `nom_mois`, `trimestre`, `semestre`, `annee` et `annee_universitaire`.
+  * Sortie : Insertion dans `dim_temps` sous MySQL.
 
 ![Design Job Temps](./images/job_dim_temps_design.png)
-*Figure 8 : Architecture du flux temporel avec deduplication tUniqRow.*
+*Figure 8 : Architecture du flux temporel multi-sources avec deduplication tUniqRow.*
 
 ![Execution Job Temps](./images/job_dim_temps_exec.jpg)
-*Figure 9 : Execution reussie : 50 lignes lues, 49 uniques inserees sans collision (Code de sortie = 0).*
+*Figure 9 : Execution reussie : 250 dates lues, 240 dates distinctes inserees sans rupture (Code de sortie = 0).*
 
 ---
 
-### 4.5 Job 5 : Alimentation de la Table de Faits (`Job_Fait_Ventes`)
-* **Role :** Chargement central des faits. Le job lit le flux transactionnel `ventes_synthese.xlsx` (`row1`), realise 3 lookups relationnels simultanes en memoire vers les dimensions (`row2: dim_client`, `row3: dim_magasin`, `row4: dim_produit`), resout les cles de substitution et charge les mesures calculees dans `fait_ventes`.
-* **Securite Referentielle :** Condition ternaire Java securisee pour les types primitifs `int` : `(row2 != null && row2.id_client_sk > 0) ? row2.id_client_sk : 1`.
+### 4.5 Job 5 : Table de Faits Centrale (`Job_Fait_Ventes`)
+* **Architecture :**
+  * Flux transactionnel : `Ventes Excel` (`ventes_synthese.xlsx`) portant 50 transactions de vente.
+  * 4 Lookups relationnels MySQL : `Cles clients` (101 clients), `Cles produits` (101 produits), `Cles magasins` (51 magasins) et `Cles des dates` (240 dates).
+  * Securite referentielle : Expression ternaire Java redirigeant toute donnee orpheline vers la cle de substitution `1` (`C_INCONNU`, `P_INCONNU`, etc.).
+  * Calculs des mesures : Montant total (`quantite * prix_unitaire`) dans `Calc montnat et clés`.
+  * Sortie : Insertion dans `fait_ventes` sous MySQL.
 
 ![Design Job Fait Ventes](./images/job_fait_ventes_design.png)
-*Figure 10 : Conception du Job_Fait_Ventes avec les 3 Lookups convergents.*
+*Figure 10 : Conception du Job FaitVente avec les 4 lookups dimensionnels convergents.*
 
 ![Execution Job Fait Ventes](./images/job_fait_ventes_exec.jpg)
 *Figure 11 : Execution reussie du Job de Faits : 50 transactions consolidees (Code de sortie = 0).*
@@ -137,9 +153,9 @@ SELECT 'fait_ventes', COUNT(*) FROM fait_ventes;
 ```
 
 **Resultats obtenus :**
-* `dim_client` : **51 lignes** (50 clients sources + 1 enregistrement d'inconnu `C_INCONNU`).
-* `dim_produit` : **51 lignes** (50 produits sources + 1 enregistrement d'inconnu `P_INCONNU`).
-* `dim_magasin` : **51 lignes** (50 magasins sources + 1 enregistrement d'inconnu `M_INCONNU`).
+* `dim_client` : **101 lignes** (100 clients consolides multi-sources + 1 enregistrement `C_INCONNU`).
+* `dim_produit` : **101 lignes** (100 produits catalogue / ventes + 1 enregistrement `P_INCONNU`).
+* `dim_magasin` : **51 lignes** (50 magasins sources + 1 enregistrement `M_INCONNU`).
 * `dim_temps` : **240 lignes** (dates uniques consolidees couvrant l'historique complet d'activite).
 * `fait_ventes` : **50 transactions** de vente parfaitement integrees.
 
@@ -196,11 +212,13 @@ ETL/
 ├── README.md                                  # Documentation detaillee du projet
 ├── Rapport_Projet_BI_LAHSAINI_Yassine.pdf     # Rapport academique complet au format PDF
 ├── create_dwh_tables.sql                      # Script SQL de creation du Data Warehouse
-├── load_data.sql                              # Script de peuplement SQL de test
-├── images/                                    # Captures d'ecran des flux et des executions
+├── load_data.sql                              # Script de peuplement SQL
+├── build_teacher_jobs.py                      # Generateur automatisé des jobs selon l'architecture exacte
+├── generate_pdf_report.py                     # Script de generation du rapport PDF academique
+├── images/                                    # Captures d'ecran des flux et des 5 executions reussies
 │   ├── referentiel_projet.png
 │   ├── job_dim_client_design.png
-│   ├── job_dim_client_exec.png
+│   ├── job_dim_client_exec.jpg
 │   ├── job_dim_produit_design.png
 │   ├── job_dim_produit_exec.jpg
 │   ├── job_dim_magasin_design.png
@@ -211,24 +229,6 @@ ETL/
 │   └── job_fait_ventes_exec.jpg
 ├── Etude de cas DW Fichiers Sources/          # Fichiers sources (Excel, CSV, XML)
 └── donnees_transformees/                      # Exports CSV transformes
-```
-
----
-
-## 8. Procedure de Publication sur GitHub
-
-Pour pousser ce projet sur votre compte GitHub, executez les commandes suivantes dans votre terminal :
-
-```bash
-cd "c:\Users\pc\OneDrive\Bureau\ETL"
-git init
-git add .
-git config --global user.email "lahsainiyassine29@gmail.com"
-git config --global user.name "lahsainiyassine"
-git commit -m "Projet Business Intelligence : Alimentation Data Warehouse Talaxie et MySQL"
-git branch -M main
-git remote add origin https://github.com/lahsainiyassine/<nom-du-depot>.git
-git push -u origin main --force
 ```
 
 ---
