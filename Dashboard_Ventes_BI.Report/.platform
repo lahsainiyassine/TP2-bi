@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Dashboard_Ventes_BI"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c9ed18c4-ee0d-4326-a96f-6101acd7459f"
+  }
+}

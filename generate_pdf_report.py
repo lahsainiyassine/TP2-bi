@@ -544,8 +544,8 @@ def build_pdf():
 
     pbi_img_path = os.path.join(img_dir, 'dashboard_power_bi.png')
     if os.path.exists(pbi_img_path):
-        story.append(Image(pbi_img_path, width=505, height=270))
-        story.append(Paragraph("<i>Figure 9 : Tableau de Bord Decisionnel interactif concu sous Power BI (Indicateurs cles, CA par Region, Modalites de Reglement et Tendance)</i>", caption_style))
+        story.append(Image(pbi_img_path, width=505, height=257))
+        story.append(Paragraph("<i>Figure 9 : Tableau de Bord Decisionnel interactif concu sous Microsoft Power BI (Indicateurs cles, CA par Region, Modalites de Reglement et Tendance)</i>", caption_style))
 
     story.append(Spacer(1, 3))
     story.append(Paragraph("10. Conclusion Generale du Projet", h2_style))
