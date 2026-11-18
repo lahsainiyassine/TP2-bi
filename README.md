@@ -190,23 +190,51 @@ ORDER BY total_encaisse DESC;
 
 ---
 
-## 7. Structure du Depot Git
+## 7. Restitution Decisionnelle sous Microsoft Power BI
+
+Afin de valoriser les donnees integrees dans `dwh_ventes` et d'offrir une interface analytique interactive pour le management, un tableau de bord decisional a ete realise sous **Microsoft Power BI Desktop**.
+
+![Dashboard Power BI](./images/dashboard_power_bi.png)
+*Figure 7 : Tableau de Bord Decisionnel interactif concu sous Power BI.*
+
+### 7.1 Indicateurs Cles et Mesures DAX
+* **Chiffre d'Affaires Total :** `SUM(fait_ventes[montant_total])` = **1 520 231,31 DH**
+* **Volume Total Vendu :** `SUM(fait_ventes[quantite_vendue])` = **1 320 unites**
+* **Panier Moyen :** `DIVIDE([Chiffre d'Affaires Total], [Nombre de Transactions], 0)` = **30 404,63 DH**
+* **Nombre de Transactions :** `COUNTROWS(fait_ventes)` = **50 ventes**
+
+### 7.2 Visualisations Metier
+1. **Chiffre d'Affaires par Region Administrative :** Analyse des 8 regions (Fes-Meknes en tete avec plus de 400 000 DH de CA, suivie de Rabat-Sale-Kenitra et Tanger-Tetouan-Al Hoceima).
+2. **Repartition par Mode de Reglement :** Ventilation du CA selon les modalites de paiement (Especes, Paiement mobile, Virement, Carte bancaire, Cheque).
+3. **Evolution Annuelle du Chiffre d'Affaires :** Suivi de l'activite de 2023 a 2025.
+4. **Tableau Detail des Top Ventes :** Visualisation unitaire des transactions majeures avec croisement client, magasin et mode de reglement.
+
+---
+
+## 8. Structure du Depot Git
 
 ```
 ETL/
 ├── README.md                                  # Documentation detaillee du projet
-├── Rapport_Projet_BI_LAHSAINI_Yassine.pdf     # Rapport academique complet au format PDF
+├── Rapport_Projet_BI_LAHSAINI_Yassine.pdf     # Rapport academique complet au format PDF (10 pages)
+├── Dashboard_Ventes_BI.pbip                   # Projet Microsoft Power BI Desktop
+├── Dashboard_Ventes_BI.Dataset/               # Modele semantique Power BI (model.bim, relations, DAX)
+├── Dashboard_Ventes_BI.Report/                # Definition du rapport et visualisations Power BI
+├── Dashboard_Ventes_BI.html                   # Dashboard web interactif autonome (Power BI Style)
+├── donnees_powerbi/                           # Donnees exportees du Data Warehouse pour Power BI
 ├── create_dwh_tables.sql                      # Script SQL de creation du Data Warehouse
 ├── load_data.sql                              # Script de peuplement SQL
-├── build_teacher_jobs.py                      # Generateur automatisé des jobs ETL
+├── build_teacher_jobs.py                      # Generateur automatise des jobs ETL Talaxie
+├── generate_powerbi_dashboard.py              # Script de generation du dashboard et capture d'ecran
 ├── generate_pdf_report.py                     # Script de generation du rapport PDF academique
-├── images/                                    # Captures d'ecran des flux et des 5 executions reussies
+├── images/                                    # Captures authentiques du projet
 │   ├── referentiel_projet.png
 │   ├── job_dim_client_exec.jpg
 │   ├── job_dim_produit_exec.jpg
 │   ├── job_dim_magasin_exec.jpg
 │   ├── job_dim_temps_exec.jpg
-│   └── job_fait_ventes_exec.jpg
+│   ├── job_fait_ventes_exec.jpg
+│   └── dashboard_power_bi.png
 ├── Etude de cas DW Fichiers Sources/          # Fichiers sources (Excel, CSV, XML)
 └── donnees_transformees/                      # Exports CSV transformes
 ```

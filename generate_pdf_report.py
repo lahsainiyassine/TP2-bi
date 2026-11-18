@@ -163,6 +163,15 @@ def build_pdf():
         spaceAfter=6
     )
 
+    th_style = ParagraphStyle(
+        'TableHeader_Custom',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.white
+    )
+
     story = []
 
     # ==========================================
@@ -193,7 +202,7 @@ def build_pdf():
         [Paragraph("<b>Filiere universitaire :</b>", body_style), Paragraph("Master TEE (Technologie Educative Emergente)", body_style)],
         [Paragraph("<b>Module de formation :</b>", body_style), Paragraph("Business Intelligence & Data Warehousing", body_style)],
         [Paragraph("<b>Enseignante responsable :</b>", body_style), Paragraph("Pr. Oumaima STITINI", body_style)],
-        [Paragraph("<b>Plateformes et Outils :</b>", body_style), Paragraph("Talaxie Open Studio for Data Integration (v8.9), MySQL / MariaDB", body_style)],
+        [Paragraph("<b>Plateformes et Outils :</b>", body_style), Paragraph("Talaxie Open Studio for Data Integration (v8.9), MySQL / MariaDB, Microsoft Power BI", body_style)],
         [Paragraph("<b>Depot GitHub :</b>", body_style), Paragraph("https://github.com/lahsainiyassine/TP2-bi", body_style)],
         [Paragraph("<b>Date de remise :</b>", body_style), Paragraph("Novembre 2026", body_style)]
     ]
@@ -432,7 +441,7 @@ def build_pdf():
     ))
 
     vol_data = [
-        [Paragraph("<b>Table du Data Warehouse</b>", body_style), Paragraph("<b>Type</b>", body_style), Paragraph("<b>Nombre de Lignes</b>", body_style), Paragraph("<b>Statut de Conformite</b>", body_style)],
+        [Paragraph("<b>Table du Data Warehouse</b>", th_style), Paragraph("<b>Type</b>", th_style), Paragraph("<b>Nombre de Lignes</b>", th_style), Paragraph("<b>Statut de Conformite</b>", th_style)],
         [Paragraph("dim_client", body_style), Paragraph("Dimension", body_style), Paragraph("101 lignes (100 sources + 1 inconnu)", body_style), Paragraph("Conforme (integrite respectee)", body_style)],
         [Paragraph("dim_produit", body_style), Paragraph("Dimension", body_style), Paragraph("101 lignes (100 sources + 1 inconnu)", body_style), Paragraph("Conforme (catalogue enrichi)", body_style)],
         [Paragraph("dim_magasin", body_style), Paragraph("Dimension", body_style), Paragraph("51 lignes (50 sources + 1 inconnu)", body_style), Paragraph("Conforme (localisation et gestion)", body_style)],
@@ -450,7 +459,7 @@ def build_pdf():
     ]))
     story.append(t_vol)
 
-    story.append(Spacer(1, 3))
+    story.append(Spacer(1, 4))
     story.append(Paragraph("8.2 Requetes Analytiques Decisionnelles (Indicateurs OLAP)", h2_style))
 
     story.append(Paragraph("<b>KPI 1 : Chiffre d'Affaires par Region Administrative et par Magasin</b>", body_style))
@@ -459,14 +468,14 @@ def build_pdf():
         code_style
     ))
 
-    story.append(Spacer(1, 2))
+    story.append(Spacer(1, 3))
     story.append(Paragraph("<b>KPI 2 : Analyse des Ventes par Categorie de Produit et Annee</b>", body_style))
     story.append(Paragraph(
         "<code>SELECT t.annee, p.categorie, SUM(f.quantite_vendue) AS articles_vendus, ROUND(SUM(f.montant_total), 2) AS ca_dh FROM fait_ventes f JOIN dim_produit p ON f.id_produit_fk = p.id_produit_sk JOIN dim_temps t ON f.id_temps_fk = t.id_temps GROUP BY t.annee, p.categorie ORDER BY t.annee DESC, ca_dh DESC;</code>",
         code_style
     ))
 
-    story.append(Spacer(1, 2))
+    story.append(Spacer(1, 3))
     story.append(Paragraph("<b>KPI 3 : Repartition des Ventes par Mode de Reglement et Panier Moyen</b>", body_style))
     story.append(Paragraph(
         "<code>SELECT mode_paiement, COUNT(*) AS transactions, ROUND(SUM(montant_total), 2) AS total_encaisse, ROUND(AVG(montant_total), 2) AS panier_moyen FROM fait_ventes GROUP BY mode_paiement ORDER BY total_encaisse DESC;</code>",
@@ -474,13 +483,78 @@ def build_pdf():
     ))
 
     story.append(Spacer(1, 4))
-    story.append(Paragraph("8.3 Conclusion Generale du Projet", h2_style))
+    story.append(Paragraph("8.3 Resultats des Agregations Extraites de MySQL", h2_style))
     story.append(Paragraph(
-        "Ce projet a permis de maitriser l'ensemble de la chaine decisionnelle BI : de l'analyse des besoins et de la modelisation multidimensionnelle en schema en etoile, jusqu'a la construction de flux ETL modulaires et robustes sous Talaxie Open Studio, et la validation des indicateurs metier via des requetes SQL complexes.",
+        "L'execution des requetes analytiques sur les 50 transactions consolidees produit les agregats decisionnels suivants :",
+        body_style
+    ))
+
+    kpi_res_data = [
+        [Paragraph("<b>Axe Analytique</b>", th_style), Paragraph("<b>Segment Majeur</b>", th_style), Paragraph("<b>Volume Ventes</b>", th_style), Paragraph("<b>Chiffre d'Affaires (DH)</b>", th_style)],
+        [Paragraph("Top Region 1", body_style), Paragraph("Fes-Meknes", body_style), Paragraph("341 articles", body_style), Paragraph("<b>404 680,56 DH</b>", body_style)],
+        [Paragraph("Top Region 2", body_style), Paragraph("Rabat-Sale-Kenitra", body_style), Paragraph("237 articles", body_style), Paragraph("<b>264 949,36 DH</b>", body_style)],
+        [Paragraph("Top Region 3", body_style), Paragraph("Tanger-Tetouan-Al Hoceima", body_style), Paragraph("185 articles", body_style), Paragraph("<b>208 647,15 DH</b>", body_style)],
+        [Paragraph("Mode Reglement 1", body_style), Paragraph("Especes (12 trans.)", body_style), Paragraph("374 articles", body_style), Paragraph("<b>415 737,62 DH</b>", body_style)],
+        [Paragraph("Mode Reglement 2", body_style), Paragraph("Paiement mobile (9 trans.)", body_style), Paragraph("280 articles", body_style), Paragraph("<b>324 712,24 DH</b>", body_style)]
+    ]
+    t_kpi_res = Table(kpi_res_data, colWidths=[110, 160, 95, 140])
+    t_kpi_res.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), primary_color),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, light_bg])
+    ]))
+    story.append(t_kpi_res)
+
+    story.append(PageBreak())
+
+    # ==========================================
+    # PAGE 10 : RESTITUTION POWER BI & CONCLUSION
+    # ==========================================
+    story.append(Paragraph("9. Restitution Decisionnelle sous Microsoft Power BI", h1_style))
+    story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
+
+    story.append(Paragraph("9.1 Modelisation Semantique et Formules DAX", h2_style))
+    story.append(Paragraph(
+        "Afin d'offrir une restitution visuelle interactive et dynamique aux decideurs, les donnees du Data Warehouse ont ete connectees a <b>Microsoft Power BI</b>. Le modele semantique en etoile est valorise par des mesures analytiques DAX dediees :",
+        body_style
+    ))
+
+    pbi_dax_data = [
+        [Paragraph("<b>Indicateur DAX</b>", th_style), Paragraph("<b>Formule de Calcul</b>", th_style), Paragraph("<b>Valeur Mesuree</b>", th_style)],
+        [Paragraph("Chiffre d'Affaires Total", body_style), Paragraph("<code>SUM(fait_ventes[montant_total])</code>", code_style), Paragraph("<b>1 520 231,31 DH</b>", body_style)],
+        [Paragraph("Volume Total Vendu", body_style), Paragraph("<code>SUM(fait_ventes[quantite_vendue])</code>", code_style), Paragraph("<b>1 320 unites</b>", body_style)],
+        [Paragraph("Panier Moyen", body_style), Paragraph("<code>DIVIDE([CA Total], [Nb Transactions], 0)</code>", code_style), Paragraph("<b>30 404,63 DH</b>", body_style)],
+        [Paragraph("Transactions Realisees", body_style), Paragraph("<code>COUNTROWS(fait_ventes)</code>", code_style), Paragraph("<b>50 ventes</b>", body_style)]
+    ]
+    t_dax = Table(pbi_dax_data, colWidths=[140, 230, 135])
+    t_dax.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), primary_color),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, light_bg])
+    ]))
+    story.append(t_dax)
+
+    story.append(Spacer(1, 4))
+    story.append(Paragraph("9.2 Tableau de Bord Analytique et Synthese Metier", h2_style))
+
+    pbi_img_path = os.path.join(img_dir, 'dashboard_power_bi.png')
+    if os.path.exists(pbi_img_path):
+        story.append(Image(pbi_img_path, width=505, height=270))
+        story.append(Paragraph("<i>Figure 9 : Tableau de Bord Decisionnel interactif concu sous Power BI (Indicateurs cles, CA par Region, Modalites de Reglement et Tendance)</i>", caption_style))
+
+    story.append(Spacer(1, 3))
+    story.append(Paragraph("10. Conclusion Generale du Projet", h2_style))
+    story.append(Paragraph(
+        "Ce projet a permis de maitriser avec succes l'integralite de la chaine decisionnelle BI : de l'analyse des besoins et de la modelisation multidimensionnelle en schema en etoile, jusqu'a la construction de flux ETL modulaires et robustes sous Talaxie Open Studio, et la restitution visuelle executive sous Microsoft Power BI.",
         body_style
     ))
     story.append(Paragraph(
-        "L'utilisation combinee des composants <code>tUnite</code>, <code>tUniqRow</code> et <code>tMap</code> multi-lookups (Excel, CSV, XML) garantit un traitement exhaustif des donnees sans doublon ni perte d'integrite.",
+        "L'architecture mise en oeuvre assure l'interoperabilite multi-sources (Excel, CSV, XML), une deduplication stricte et une tracabilite exemplaire des donnees au service de la prise de decision strategique.",
         body_style
     ))
 

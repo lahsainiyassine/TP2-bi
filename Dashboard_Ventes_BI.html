@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Power BI - Tableau de Bord Decisionnel Ventes</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #F1F5F9; color: #0F172A; padding: 24px; }
+        
+        .pbi-navbar {
+            background: #111827;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid #F59E0B;
+        }
+        .pbi-brand { display: flex; align-items: center; gap: 12px; }
+        .pbi-tag { background: #F59E0B; color: #000; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; }
+        .pbi-title-text { font-size: 19px; font-weight: 700; }
+        .pbi-subtitle { font-size: 12px; color: #94A3B8; margin-top: 2px; }
+        .pbi-author-box { text-align: right; font-size: 12px; color: #CBD5E1; line-height: 1.5; }
+        .pbi-author-box strong { color: #FFFFFF; }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: #FFFFFF;
+            padding: 18px 20px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        .kpi-blue::before { background: #2563EB; }
+        .kpi-emerald::before { background: #059669; }
+        .kpi-amber::before { background: #D97706; }
+        .kpi-indigo::before { background: #4F46E5; }
+
+        .kpi-label { font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; }
+        .kpi-val { font-size: 26px; font-weight: 800; color: #0F172A; margin: 8px 0 4px 0; }
+        .kpi-sub { font-size: 11px; color: #059669; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+
+        .row-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .panel {
+            background: #FFFFFF;
+            padding: 18px 20px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .panel-title { font-size: 14px; font-weight: 700; color: #1E293B; }
+        .panel-tag { font-size: 11px; font-weight: 600; color: #64748B; background: #F1F5F9; padding: 2px 8px; border-radius: 4px; }
+
+        .chart-box { position: relative; height: 250px; width: 100%; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        th { background: #F8FAFC; color: #475569; font-weight: 700; text-align: left; padding: 9px 10px; border-bottom: 2px solid #E2E8F0; font-size: 11.5px; text-transform: uppercase; }
+        td { padding: 9px 10px; border-bottom: 1px solid #F1F5F9; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+        .badge-mode { padding: 3px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #EFF6FF; color: #1D4ED8; }
+    </style>
+</head>
+<body>
+
+    <div class="pbi-navbar">
+        <div class="pbi-brand">
+            <span class="pbi-tag">POWER BI</span>
+            <div>
+                <div class="pbi-title-text">Tableau de Bord Decisionnel - Data Warehouse Ventes</div>
+                <div class="pbi-subtitle">Schema en Etoile | Alimentation ETL Talaxie | Source MySQL : dwh_ventes</div>
+            </div>
+        </div>
+        <div class="pbi-author-box">
+            <div>Etudiant : <strong>LAHSAINI Yassine</strong> (Master TEE S3)</div>
+            <div>Enseignante : <strong>Pr. Oumaima STITINI</strong></div>
+            <div>Universite Cadi Ayyad - ENS Marrakech</div>
+        </div>
+    </div>
+
+    <div class="kpi-container">
+        <div class="kpi-card kpi-blue">
+            <div class="kpi-label">Chiffre d'Affaires Total</div>
+            <div class="kpi-val">1,520,231.31 DH</div>
+            <div class="kpi-sub">50 transactions consolidees</div>
+        </div>
+        <div class="kpi-card kpi-emerald">
+            <div class="kpi-label">Volume Total Vendu</div>
+            <div class="kpi-val">1,320 unites</div>
+            <div class="kpi-sub">100% integrite stock</div>
+        </div>
+        <div class="kpi-card kpi-amber">
+            <div class="kpi-label">Panier Moyen</div>
+            <div class="kpi-val">30,404.63 DH</div>
+            <div class="kpi-sub">Moyenne par vente</div>
+        </div>
+        <div class="kpi-card kpi-indigo">
+            <div class="kpi-label">Transactions Realisees</div>
+            <div class="kpi-val">50</div>
+            <div class="kpi-sub">8 regions de distribution</div>
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Chiffre d'Affaires par Region Administrative (DH)</span>
+                <span class="panel-tag">dim_magasin</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="chartRegion"></canvas>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Chiffre d'Affaires par Mode de Reglement</span>
+                <span class="panel-tag">fait_ventes</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="chartPaiement"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Evolution Annuelle du Chiffre d'Affaires (2023 - 2025)</span>
+                <span class="panel-tag">dim_temps</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="chartAnnee"></canvas>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Top 5 des Transactions les Plus Importantes</span>
+                <span class="panel-tag">Audit Faits</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Client</th>
+                        <th>Magasin</th>
+                        <th>Montant</th>
+                        <th>Reglement</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td><strong>V002</strong></td>
+                        <td>Client Inconnu</td>
+                        <td>Market El Fassi</td>
+                        <td><strong>120,436.61 DH</strong></td>
+                        <td><span class="badge-mode">Cheque</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>V032</strong></td>
+                        <td>Haddad Rania</td>
+                        <td>Boutique CasaStyle</td>
+                        <td><strong>97,601.14 DH</strong></td>
+                        <td><span class="badge-mode">Paiement mobile</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>V048</strong></td>
+                        <td>Haddad Karim</td>
+                        <td>Tech Marrakech</td>
+                        <td><strong>80,895.69 DH</strong></td>
+                        <td><span class="badge-mode">Especes</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>V001</strong></td>
+                        <td>Client Inconnu</td>
+                        <td>Super Rabat</td>
+                        <td><strong>72,819.00 DH</strong></td>
+                        <td><span class="badge-mode">Carte bancaire</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>V023</strong></td>
+                        <td>El Amrani Imane</td>
+                        <td>Fes Commerce</td>
+                        <td><strong>69,992.52 DH</strong></td>
+                        <td><span class="badge-mode">Especes</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('chartRegion'), {
+            type: 'bar',
+            data: {
+                labels: ["Fes-Meknes", "Rabat-Sale-Kenitra", "Tanger-Tetouan-Al Hoceima", "Marrakech-Safi", "Draa-Tafilalet", "Oriental", "Grand Casablanca", "Souss-Massa"],
+                datasets: [{
+                    data: [404680.56, 264949.36, 208647.15, 195881.49, 184741.05, 172027.59, 48069.5, 41234.61],
+                    backgroundColor: '#2563EB',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chartPaiement'), {
+            type: 'doughnut',
+            data: {
+                labels: ["Especes", "Paiement mobile", "Virement", "Carte bancaire", "Cheque"],
+                datasets: [{
+                    data: [415737.62, 324712.24, 289378.75, 256038.75, 234363.95],
+                    backgroundColor: ['#059669', '#2563EB', '#D97706', '#4F46E5', '#DC2626']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chartAnnee'), {
+            type: 'line',
+            data: {
+                labels: ["2023", "2024", "2025"],
+                datasets: [{
+                    data: [645206.2000000001, 474235.43, 400789.68],
+                    borderColor: '#2563EB',
+                    backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                    fill: true,
+                    tension: 0.25,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#2563EB',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

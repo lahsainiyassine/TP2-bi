@@ -1,0 +1,437 @@
+{
+  "name": "Dashboard_Ventes_BI",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "fr-FR",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true,
+      "fastCombine": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "tables": [
+      {
+        "name": "dim_client",
+        "columns": [
+          {
+            "name": "id_client_sk",
+            "dataType": "int64",
+            "sourceColumn": "id_client_sk"
+          },
+          {
+            "name": "code_client",
+            "dataType": "string",
+            "sourceColumn": "code_client"
+          },
+          {
+            "name": "nom",
+            "dataType": "string",
+            "sourceColumn": "nom"
+          },
+          {
+            "name": "prenom",
+            "dataType": "string",
+            "sourceColumn": "prenom"
+          },
+          {
+            "name": "nom_complet",
+            "dataType": "string",
+            "sourceColumn": "nom_complet"
+          },
+          {
+            "name": "ville",
+            "dataType": "string",
+            "sourceColumn": "ville"
+          },
+          {
+            "name": "email",
+            "dataType": "string",
+            "sourceColumn": "email"
+          },
+          {
+            "name": "segment_marketing",
+            "dataType": "string",
+            "sourceColumn": "segment_marketing"
+          },
+          {
+            "name": "date_inscription",
+            "dataType": "dateTime",
+            "sourceColumn": "date_inscription"
+          },
+          {
+            "name": "points_fidelite",
+            "dataType": "int64",
+            "sourceColumn": "points_fidelite"
+          },
+          {
+            "name": "type_carte",
+            "dataType": "string",
+            "sourceColumn": "type_carte"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_client",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Csv.Document(File.Contents(\"C:/Users/pc/OneDrive/Bureau/ETL/donnees_powerbi/dim_client.csv\"),[Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "Changed = Table.TransformColumnTypes(Promoted,{{\"id_client_sk\", Int64.Type}, {\"code_client\", type text}, {\"nom\", type text}, {\"prenom\", type text}, {\"nom_complet\", type text}, {\"ville\", type text}, {\"email\", type text}, {\"segment_marketing\", type text}, {\"date_inscription\", type date}, {\"points_fidelite\", Int64.Type}, {\"type_carte\", type text}})",
+                "in Changed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_produit",
+        "columns": [
+          {
+            "name": "id_produit_sk",
+            "dataType": "int64",
+            "sourceColumn": "id_produit_sk"
+          },
+          {
+            "name": "code_produit",
+            "dataType": "string",
+            "sourceColumn": "code_produit"
+          },
+          {
+            "name": "nom_produit",
+            "dataType": "string",
+            "sourceColumn": "nom_produit"
+          },
+          {
+            "name": "categorie",
+            "dataType": "string",
+            "sourceColumn": "categorie"
+          },
+          {
+            "name": "sous_categorie",
+            "dataType": "string",
+            "sourceColumn": "sous_categorie"
+          },
+          {
+            "name": "marque",
+            "dataType": "string",
+            "sourceColumn": "marque"
+          },
+          {
+            "name": "prix_achat",
+            "dataType": "double",
+            "sourceColumn": "prix_achat"
+          },
+          {
+            "name": "prix_vente",
+            "dataType": "double",
+            "sourceColumn": "prix_vente"
+          },
+          {
+            "name": "fournisseur",
+            "dataType": "string",
+            "sourceColumn": "fournisseur"
+          },
+          {
+            "name": "pays_fournisseur",
+            "dataType": "string",
+            "sourceColumn": "pays_fournisseur"
+          },
+          {
+            "name": "statut",
+            "dataType": "string",
+            "sourceColumn": "statut"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_produit",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Csv.Document(File.Contents(\"C:/Users/pc/OneDrive/Bureau/ETL/donnees_powerbi/dim_produit.csv\"),[Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "Changed = Table.TransformColumnTypes(Promoted,{{\"id_produit_sk\", Int64.Type}, {\"code_produit\", type text}, {\"nom_produit\", type text}, {\"categorie\", type text}, {\"sous_categorie\", type text}, {\"marque\", type text}, {\"prix_achat\", type number}, {\"prix_vente\", type number}, {\"fournisseur\", type text}, {\"pays_fournisseur\", type text}, {\"statut\", type text}})",
+                "in Changed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_magasin",
+        "columns": [
+          {
+            "name": "id_magasin_sk",
+            "dataType": "int64",
+            "sourceColumn": "id_magasin_sk"
+          },
+          {
+            "name": "code_magasin",
+            "dataType": "string",
+            "sourceColumn": "code_magasin"
+          },
+          {
+            "name": "nom_magasin",
+            "dataType": "string",
+            "sourceColumn": "nom_magasin"
+          },
+          {
+            "name": "ville",
+            "dataType": "string",
+            "sourceColumn": "ville"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region"
+          },
+          {
+            "name": "pays",
+            "dataType": "string",
+            "sourceColumn": "pays"
+          },
+          {
+            "name": "surface_m2",
+            "dataType": "int64",
+            "sourceColumn": "surface_m2"
+          },
+          {
+            "name": "type_magasin",
+            "dataType": "string",
+            "sourceColumn": "type_magasin"
+          },
+          {
+            "name": "date_ouverture",
+            "dataType": "dateTime",
+            "sourceColumn": "date_ouverture"
+          },
+          {
+            "name": "chiffre_affaires_annuel",
+            "dataType": "double",
+            "sourceColumn": "chiffre_affaires_annuel"
+          },
+          {
+            "name": "nb_employes",
+            "dataType": "int64",
+            "sourceColumn": "nb_employes"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_magasin",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Csv.Document(File.Contents(\"C:/Users/pc/OneDrive/Bureau/ETL/donnees_powerbi/dim_magasin.csv\"),[Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "Changed = Table.TransformColumnTypes(Promoted,{{\"id_magasin_sk\", Int64.Type}, {\"code_magasin\", type text}, {\"nom_magasin\", type text}, {\"ville\", type text}, {\"region\", type text}, {\"pays\", type text}, {\"surface_m2\", Int64.Type}, {\"type_magasin\", type text}, {\"date_ouverture\", type date}, {\"chiffre_affaires_annuel\", type number}, {\"nb_employes\", Int64.Type}})",
+                "in Changed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_temps",
+        "columns": [
+          {
+            "name": "id_temps",
+            "dataType": "int64",
+            "sourceColumn": "id_temps"
+          },
+          {
+            "name": "date_complete",
+            "dataType": "dateTime",
+            "sourceColumn": "date_complete"
+          },
+          {
+            "name": "jour",
+            "dataType": "int64",
+            "sourceColumn": "jour"
+          },
+          {
+            "name": "mois",
+            "dataType": "int64",
+            "sourceColumn": "mois"
+          },
+          {
+            "name": "nom_mois",
+            "dataType": "string",
+            "sourceColumn": "nom_mois"
+          },
+          {
+            "name": "trimestre",
+            "dataType": "int64",
+            "sourceColumn": "trimestre"
+          },
+          {
+            "name": "annee",
+            "dataType": "int64",
+            "sourceColumn": "annee"
+          },
+          {
+            "name": "jour_semaine",
+            "dataType": "string",
+            "sourceColumn": "jour_semaine"
+          },
+          {
+            "name": "semestre",
+            "dataType": "string",
+            "sourceColumn": "semestre"
+          },
+          {
+            "name": "annee_universitaire",
+            "dataType": "string",
+            "sourceColumn": "annee_universitaire"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_temps",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Csv.Document(File.Contents(\"C:/Users/pc/OneDrive/Bureau/ETL/donnees_powerbi/dim_temps.csv\"),[Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "Changed = Table.TransformColumnTypes(Promoted,{{\"id_temps\", Int64.Type}, {\"date_complete\", type date}, {\"jour\", Int64.Type}, {\"mois\", Int64.Type}, {\"nom_mois\", type text}, {\"trimestre\", Int64.Type}, {\"annee\", Int64.Type}, {\"jour_semaine\", type text}, {\"semestre\", type text}, {\"annee_universitaire\", type text}})",
+                "in Changed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fait_ventes",
+        "columns": [
+          {
+            "name": "id_vente_sk",
+            "dataType": "int64",
+            "sourceColumn": "id_vente_sk"
+          },
+          {
+            "name": "code_vente",
+            "dataType": "string",
+            "sourceColumn": "code_vente"
+          },
+          {
+            "name": "id_client_fk",
+            "dataType": "int64",
+            "sourceColumn": "id_client_fk"
+          },
+          {
+            "name": "id_produit_fk",
+            "dataType": "int64",
+            "sourceColumn": "id_produit_fk"
+          },
+          {
+            "name": "id_magasin_fk",
+            "dataType": "int64",
+            "sourceColumn": "id_magasin_fk"
+          },
+          {
+            "name": "id_temps_fk",
+            "dataType": "int64",
+            "sourceColumn": "id_temps_fk"
+          },
+          {
+            "name": "quantite_vendue",
+            "dataType": "int64",
+            "sourceColumn": "quantite_vendue"
+          },
+          {
+            "name": "prix_unitaire",
+            "dataType": "double",
+            "sourceColumn": "prix_unitaire"
+          },
+          {
+            "name": "montant_total",
+            "dataType": "double",
+            "sourceColumn": "montant_total"
+          },
+          {
+            "name": "mode_paiement",
+            "dataType": "string",
+            "sourceColumn": "mode_paiement"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Chiffre d'Affaires Total",
+            "expression": "SUM(fait_ventes[montant_total])",
+            "formatString": "#,0.00 \"DH\""
+          },
+          {
+            "name": "Quantité Totale Vendue",
+            "expression": "SUM(fait_ventes[quantite_vendue])",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Nombre de Transactions",
+            "expression": "COUNTROWS(fait_ventes)",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Panier Moyen",
+            "expression": "DIVIDE([Chiffre d'Affaires Total], [Nombre de Transactions], 0)",
+            "formatString": "#,0.00 \"DH\""
+          },
+          {
+            "name": "Prix Moyen Unitaire",
+            "expression": "AVERAGE(fait_ventes[prix_unitaire])",
+            "formatString": "#,0.00 \"DH\""
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fait_ventes",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let Source = Csv.Document(File.Contents(\"C:/Users/pc/OneDrive/Bureau/ETL/donnees_powerbi/fait_ventes.csv\"),[Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "Changed = Table.TransformColumnTypes(Promoted,{{\"id_vente_sk\", Int64.Type}, {\"code_vente\", type text}, {\"id_client_fk\", Int64.Type}, {\"id_produit_fk\", Int64.Type}, {\"id_magasin_fk\", Int64.Type}, {\"id_temps_fk\", Int64.Type}, {\"quantite_vendue\", Int64.Type}, {\"prix_unitaire\", type number}, {\"montant_total\", type number}, {\"mode_paiement\", type text}})",
+                "in Changed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "rel_client",
+        "fromTable": "fait_ventes",
+        "fromColumn": "id_client_fk",
+        "toTable": "dim_client",
+        "toColumn": "id_client_sk"
+      },
+      {
+        "name": "rel_produit",
+        "fromTable": "fait_ventes",
+        "fromColumn": "id_produit_fk",
+        "toTable": "dim_produit",
+        "toColumn": "id_produit_sk"
+      },
+      {
+        "name": "rel_magasin",
+        "fromTable": "fait_ventes",
+        "fromColumn": "id_magasin_fk",
+        "toTable": "dim_magasin",
+        "toColumn": "id_magasin_sk"
+      },
+      {
+        "name": "rel_temps",
+        "fromTable": "fait_ventes",
+        "fromColumn": "id_temps_fk",
+        "toTable": "dim_temps",
+        "toColumn": "id_temps"
+      }
+    ]
+  }
+}
