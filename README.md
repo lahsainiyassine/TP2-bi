@@ -230,8 +230,4 @@ ETL/
 │   └── dashboard_power_bi.png
 ├── Etude de cas DW Fichiers Sources/          # Fichiers sources (Excel, CSV, XML)
 └── donnees_transformees/                      # Exports CSV transformes
-```
 
----
-
-*Projet realise et documente par **LAHSAINI Yassine** dans le cadre du Master TEE - ENS Marrakech.*
