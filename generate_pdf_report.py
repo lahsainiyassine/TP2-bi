@@ -155,11 +155,11 @@ def build_pdf():
         'Caption_Custom',
         parent=styles['Normal'],
         fontName='Helvetica-Oblique',
-        fontSize=7.5,
-        leading=9.5,
+        fontSize=8,
+        leading=10,
         textColor=colors.HexColor("#4A5568"),
         alignment=1,
-        spaceBefore=2,
+        spaceBefore=3,
         spaceAfter=6
     )
 
@@ -218,7 +218,7 @@ def build_pdf():
 
     story.append(Paragraph("1.1 Contexte et Enjeux Metier", h2_style))
     story.append(Paragraph(
-        "Dans le cadre des activites d'une societe de distribution commerciale, les informations operationnelles sont fragmentees entre de multiples systemes heterogenes : les comptes clients, le catalogue des articles, les points de vente physiques et les ventes effectuees reposent sur des formats disparates (classeurs Excel, fichiers plats CSV et fichiers hierarchiques XML).",
+        "Dans le cadre des activites d'une societe de distribution commerciale, les informations operationnelles sont fragmentees entre de multiples systemes heterogenes : les comptes clients, le catalogue des articles, les points de vente physiques et les transactions de caisse reposent sur des formats disparates (classeurs Excel, fichiers plats CSV et fichiers hierarchiques XML).",
         body_style
     ))
     story.append(Paragraph(
@@ -283,9 +283,9 @@ def build_pdf():
     story.append(t_dwh)
 
     story.append(Spacer(1, 4))
-    story.append(Paragraph("2.2 Le Pattern Architectural Exige par l'Enseignant", h2_style))
+    story.append(Paragraph("2.2 Le Pattern Architectural Multi-Sources", h2_style))
     story.append(Paragraph(
-        "L'architecture imposee par l'enseignant pour les dimensions complexes (Client, Produit, Temps) s'appuie sur une sequence d'integration hautement rigoureuse :",
+        "Afin de garantir l'exhaustivite et l'integrite de chaque entite, l'architecture implementee sous Talaxie repose sur un patron en trois etapes :",
         body_style
     ))
     story.append(Paragraph("1. <b>Convergence et Unification (tUnite) :</b> Extraction simultanee des identifiants depuis la table de reference et depuis la table des transactions, puis fusion via <code>tUnite</code>.", bullet_style))
@@ -306,26 +306,20 @@ def build_pdf():
     story.append(Paragraph("3. Job 1 : Dimension Client (Job_Dim_Client_Ventes)", h1_style))
     story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
 
-    story.append(Paragraph("3.1 Description Fonctionnelle et Flux de Donnees", h2_style))
+    story.append(Paragraph("3.1 Conception et Execution du Flux Client", h2_style))
     story.append(Paragraph(
-        "Le job <b>Job_Dim_Client_Ventes</b> integre les donnees clients a partir de trois formats differents (Excel, CSV et XML) conformement a l'architecture de l'enseignant :",
+        "Le job <b>Job_Dim_Client_Ventes</b> integre et deduplique les donnees clients issues de <code>clients_base_50.xlsx</code> (Excel), <code>clients_online_50.csv</code> (CSV) et <code>clients_fidelite_50.xml</code> (XML) :",
         body_style
     ))
-    story.append(Paragraph("- <b>Double extraction d'identifiants :</b> `Codes clients Excel` (depuis <code>clients_base_50.xlsx</code>) et `Clients dans ventes` (depuis <code>ventes_synthese.xlsx</code>) passent chacun par un composant <code>tMap</code> pour extraire les codes clients.", bullet_style))
-    story.append(Paragraph("- <b>Unification et Deduplication :</b> `Rassembler codes` (<code>tUnite</code>) fusionne les flux (100 lignes traitees), puis `Codes uniques` (<code>tUniqRow</code>) garantit l'unicite absolue des identifiants clients.", bullet_style))
-    story.append(Paragraph("- <b>Trois Lookups Multi-Formats :</b> Dans `Relier clients` (<code>tMap</code>), le flux principal de cles uniques realise 3 jointures gauches : `Base clients` (Excel), `Clients web CSV` (CSV) et `Fidelite XML` (XML parse avec Dom4j).", bullet_style))
-    story.append(Paragraph("- <b>Sortie MySQL :</b> Alimentation de la table `dim_client` avec generation de la cle surrogate `id_client_sk`.", bullet_style))
+    story.append(Paragraph("- <b>Double extraction :</b> 50 codes depuis la base clients et 50 codes depuis les ventes sont unifies par <code>tUnite</code> (100 lignes traitees), puis dedupliques par <code>tUniqRow</code>.", bullet_style))
+    story.append(Paragraph("- <b>Lookups croises :</b> Le tMap central <code>Relier clients</code> realise 3 jointures gauches vers Excel, CSV et XML (Dom4j) pour recuperer noms, villes, emails, segments et points fidelite.", bullet_style))
+    story.append(Paragraph("- <b>Chargement MySQL :</b> Ecriture dans <code>dim_client</code> sous la cle de substitution <code>id_client_sk</code>.", bullet_style))
 
-    client_design = os.path.join(img_dir, 'job_dim_client_design.png')
     client_exec = os.path.join(img_dir, 'job_dim_client_exec.jpg')
-    if os.path.exists(client_design):
-        story.append(Spacer(1, 2))
-        story.append(Image(client_design, width=440, height=195))
-        story.append(Paragraph("Figure 2 : Architecture du Job DimClient (Modele exact de l'enseignant avec tUnite, tUniqRow et 3 lookups).", caption_style))
     if os.path.exists(client_exec):
-        story.append(Spacer(1, 2))
-        story.append(Image(client_exec, width=440, height=215))
-        story.append(Paragraph("Figure 3 : Execution reussie sous Talaxie (100 lignes traitees, Lookups connectes, Code de sortie = 0).", caption_style))
+        story.append(Spacer(1, 4))
+        story.append(Image(client_exec, width=460, height=360))
+        story.append(Paragraph("Figure 2 : Conception et execution reussie du Job DimClient sous Talaxie Open Studio (100 lignes traitees, [Code de sortie = 0]).", caption_style))
 
     story.append(PageBreak())
 
@@ -335,26 +329,20 @@ def build_pdf():
     story.append(Paragraph("4. Job 2 : Dimension Produit (Job_Dim_Produit_Ventes)", h1_style))
     story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
 
-    story.append(Paragraph("4.1 Description Fonctionnelle et Flux de Donnees", h2_style))
+    story.append(Paragraph("4.1 Conception et Execution du Flux Produit", h2_style))
     story.append(Paragraph(
-        "Le job <b>Job_Dim_Produit_Ventes</b> consolide le referentiel catalogue en croisant les articles vendus avec les informations fournisseurs :",
+        "Le job <b>Job_Dim_Produit_Ventes</b> consolide le referentiel catalogue en croisant les articles vendus avec les donnees d'approvisionnement des fournisseurs :",
         body_style
     ))
-    story.append(Paragraph("- <b>Unification des codes articles :</b> `Codes du catalogue` (Excel) et `Produits dans ventes` (Excel) sont rediriges vers `Reunir codes` (<code>tUnite</code>) pour assurer l'exhaustivite des references vendues.", bullet_style))
-    story.append(Paragraph("- <b>Deduplication :</b> `Codes uniques` (<code>tUniqRow</code>) garantit qu'aucun code produit ne soit duplique.", bullet_style))
-    story.append(Paragraph("- <b>Enrichissement multi-sources :</b> Le composant `Lier produits` (<code>tMap</code>) effectue une double jointure gauche avec `Details catalogue` (Excel) et `Fournisseurs CSV` (CSV) pour adjoindre le pays du fournisseur, le delai logistique et le cout de transport.", bullet_style))
-    story.append(Paragraph("- <b>Chargement MySQL :</b> Ecriture dans `dim_produit` avec generation de la cle surrogate `id_produit_sk`.", bullet_style))
+    story.append(Paragraph("- <b>Unification des references :</b> Extraction simultanee depuis <code>produits_catalogue.xlsx</code> et <code>ventes_synthese.xlsx</code>, fusionnees par <code>tUnite</code> (100 lignes) et filtrees par <code>tUniqRow</code>.", bullet_style))
+    story.append(Paragraph("- <b>Double Lookup relationnel :</b> Dans <code>Lier produits</code> (tMap), jointure gauche vers le catalogue Excel (prix, categorie, marque) et vers <code>produits_fournisseurs.csv</code> (fournisseur, pays, delai, cout transport).", bullet_style))
+    story.append(Paragraph("- <b>Chargement MySQL :</b> Insertion dans <code>dim_produit</code> sous la cle surrogate <code>id_produit_sk</code>.", bullet_style))
 
-    prod_design = os.path.join(img_dir, 'job_dim_produit_design.png')
     prod_exec = os.path.join(img_dir, 'job_dim_produit_exec.jpg')
-    if os.path.exists(prod_design):
-        story.append(Spacer(1, 2))
-        story.append(Image(prod_design, width=440, height=195))
-        story.append(Paragraph("Figure 4 : Architecture du Job DimProduit avec double entree, tUnite, tUniqRow et lookups croises.", caption_style))
     if os.path.exists(prod_exec):
-        story.append(Spacer(1, 2))
-        story.append(Image(prod_exec, width=440, height=215))
-        story.append(Paragraph("Figure 5 : Execution reussie du Job Produit sous Talaxie (100 lignes traitees, Code de sortie = 0).", caption_style))
+        story.append(Spacer(1, 4))
+        story.append(Image(prod_exec, width=460, height=335))
+        story.append(Paragraph("Figure 3 : Conception et execution reussie du Job DimProduit sous Talaxie Open Studio (100 lignes traitees, [Code de sortie = 0]).", caption_style))
 
     story.append(PageBreak())
 
@@ -364,88 +352,70 @@ def build_pdf():
     story.append(Paragraph("5. Job 3 : Dimension Magasin (Job_Dim_Magasin_Ventes)", h1_style))
     story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
 
-    story.append(Paragraph("5.1 Description Fonctionnelle et Flux de Donnees", h2_style))
+    story.append(Paragraph("5.1 Conception et Execution du Flux Magasin", h2_style))
     story.append(Paragraph(
-        "Le job <b>Job_Dim_Magasin_Ventes</b> integre le reseau de distribution physique en reliant la geographie des boutiques a leurs donnees de gestion :",
+        "Le job <b>Job_Dim_Magasin_Ventes</b> synchronise la localisation spatiale des points de vente avec leurs donnees de gestion financiere et humaine :",
         body_style
     ))
-    story.append(Paragraph("- <b>Flux Principal :</b> Lecture du fichier `Localisation CSV` (`magasins_localisation (2).csv`) apportant les codes magasins, noms, villes, regions geographiques et pays.", bullet_style))
-    story.append(Paragraph("- <b>Lookup de Gestion :</b> Lecture du classeur `Gestoin magasins Excel` (`magasins_ventes (1).xlsx`) apportant la surface en m2, le chiffre d'affaires annuel moyen, l'effectif salarie et la date d'ouverture.", bullet_style))
-    story.append(Paragraph("- <b>Jointure et Harmonisation :</b> Le composant `Lier magasins` (<code>tMap</code>) fusionne les attributs, convertit les types numeriques et transmet le flux `sortie_magasin`.", bullet_style))
-    story.append(Paragraph("- <b>Alimentation MySQL :</b> Chargement dans la table `dim_magasin` sous MySQL.", bullet_style))
+    story.append(Paragraph("- <b>Flux Principal :</b> Lecture de <code>magasins_localisation (2).csv</code> apportant les codes magasins, noms, villes, regions geographiques et pays (50 magasins).", bullet_style))
+    story.append(Paragraph("- <b>Lookup de Gestion :</b> Lecture de <code>magasins_ventes (1).xlsx</code> apportant surface commerciale, date d'ouverture, effectif et chiffre d'affaires annuel.", bullet_style))
+    story.append(Paragraph("- <b>Jointure et Ecriture :</b> <code>Lier magasins</code> (tMap) enrichit les enregistrements et alimente <code>dim_magasin</code> sous MySQL.", bullet_style))
 
-    mag_design = os.path.join(img_dir, 'job_dim_magasin_design.png')
     mag_exec = os.path.join(img_dir, 'job_dim_magasin_exec.jpg')
-    if os.path.exists(mag_design):
-        story.append(Spacer(1, 2))
-        story.append(Image(mag_design, width=440, height=195))
-        story.append(Paragraph("Figure 6 : Conception du Job DimMagasin reliant localisation CSV et gestion Excel.", caption_style))
     if os.path.exists(mag_exec):
-        story.append(Spacer(1, 2))
-        story.append(Image(mag_exec, width=440, height=215))
-        story.append(Paragraph("Figure 7 : Execution reussie du Job Magasin sous Talaxie (50 lignes traitees, Code de sortie = 0).", caption_style))
+        story.append(Spacer(1, 4))
+        story.append(Image(mag_exec, width=460, height=325))
+        story.append(Paragraph("Figure 4 : Conception et execution reussie du Job DimMagasin sous Talaxie Open Studio (50 magasins charges, [Code de sortie = 0]).", caption_style))
 
     story.append(PageBreak())
 
     # ==========================================
     # PAGE 7 : JOB DIM_TEMPS
     # ==========================================
-    story.append(Paragraph("6. Job 4 : Dimension Temps (Job_Dim_Temps_Ventes)", h1_style))
+    story.append(Paragraph("6. Job 4 : Dimension Temps Multi-Sources (Job_Dim_Temps_Ventes)", h1_style))
     story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
 
     story.append(Paragraph("6.1 Collecte Multi-Sources et Decompilation Calendaire", h2_style))
     story.append(Paragraph(
-        "Conformement aux exigences du professeur, la dimension temps agrege l'ensemble des dates d'evenements metier du systeme d'information :",
+        "La dimension temporelle consolide l'ensemble des dates d'evenements operationnels pour eviter toute rupture calendaire :",
         body_style
     ))
-    story.append(Paragraph("1. <b>Cinq flux sources simultanes :</b> `Clients Excel` (date inscription), `Clients web` (premier achat), `Catalogue Excel` (date insertion produit), `Magasins CSV` (date ouverture) et `Ventes Excel` (date vente).", bullet_style))
-    story.append(Paragraph("2. <b>Extraction et Standardisation :</b> Cinq composants <code>tMap</code> normalisent les dates d'evenements au format Date Java unifie.", bullet_style))
-    story.append(Paragraph("3. <b>Agregation (tUnite) :</b> Le composant `Reunir dates` regroupe les 5 flux en un ensemble chronologique total de 250 lignes.", bullet_style))
-    story.append(Paragraph("4. <b>Deduplication Temporelle (tUniqRow) :</b> Le composant `Dates uniques` filtre les doublons et isole 240 dates distinctes.", bullet_style))
-    story.append(Paragraph("5. <b>Decomposition Calendaire :</b> `Mois et trimestre` (<code>tMap</code>) calcule <code>id_temps</code> (yyyyMMdd), <code>jour</code>, <code>mois</code>, <code>nom_mois</code>, <code>trimestre</code>, <code>semestre</code>, <code>annee</code> et <code>annee_universitaire</code>.", bullet_style))
-    story.append(Paragraph("6. <b>Sortie MySQL :</b> Insertion dans `dim_temps` garantissant un calendrier complet et sans aucune rupture temporelle.", bullet_style))
+    story.append(Paragraph("1. <b>Cinq flux sources simultanes :</b> Inscriptions clients (Excel), premier achat web (CSV), insertion catalogue (Excel), ouverture magasin (CSV) et date vente (Excel).", bullet_style))
+    story.append(Paragraph("2. <b>Agregation exhaustive (tUnite) :</b> Regroupement des 5 flux en un ensemble chronologique totalisant 250 dates lues.", bullet_style))
+    story.append(Paragraph("3. <b>Deduplication absolue (tUniqRow) :</b> Filtrage strict supprimant les redondances pour isoler 240 dates distinctes.", bullet_style))
+    story.append(Paragraph("4. <b>Decomposition Calendaire :</b> <code>Mois et trimestre</code> (tMap) calcule <code>id_temps</code> (yyyyMMdd), <code>jour</code>, <code>mois</code>, <code>nom_mois</code>, <code>trimestre</code>, <code>semestre</code>, <code>annee</code> et <code>annee_universitaire</code>.", bullet_style))
+    story.append(Paragraph("5. <b>Insertion MySQL :</b> Chargement dans <code>dim_temps</code> sans doublon.", bullet_style))
 
-    temps_design = os.path.join(img_dir, 'job_dim_temps_design.png')
     temps_exec = os.path.join(img_dir, 'job_dim_temps_exec.jpg')
-    if os.path.exists(temps_design):
-        story.append(Spacer(1, 2))
-        story.append(Image(temps_design, width=440, height=195))
-        story.append(Paragraph("Figure 8 : Architecture du Job DimTemps agregeant 5 sources distinctes avec deduplication.", caption_style))
     if os.path.exists(temps_exec):
-        story.append(Spacer(1, 2))
-        story.append(Image(temps_exec, width=440, height=215))
-        story.append(Paragraph("Figure 9 : Execution reussie du Job Temps sous Talaxie (250 dates lues, 240 uniques inserees, Code = 0).", caption_style))
+        story.append(Spacer(1, 4))
+        story.append(Image(temps_exec, width=460, height=350))
+        story.append(Paragraph("Figure 5 : Conception et execution reussie du Job DimTemps sous Talaxie Open Studio (250 lues, 240 uniques inserees, [Code de sortie = 0]).", caption_style))
 
     story.append(PageBreak())
 
     # ==========================================
     # PAGE 8 : JOB FAIT_VENTES
     # ==========================================
-    story.append(Paragraph("7. Job 5 : Table de Faits (Job_Fait_Ventes)", h1_style))
+    story.append(Paragraph("7. Job 5 : Table de Faits Centrale (Job_Fait_Ventes)", h1_style))
     story.append(HRFlowable(width="100%", thickness=1, color=primary_color, spaceAfter=8, spaceBefore=2))
 
     story.append(Paragraph("7.1 Resolution des Cles Dimensionnelles et Calcul des Indicateurs", h2_style))
     story.append(Paragraph(
-        "Le job <b>Job_Fait_Ventes</b> constitue le coeur du Data Warehouse en liant les faits transactionnels a toutes les dimensions :",
+        "Le job <b>Job_Fait_Ventes</b> constitue le centre de l'architecture decisionnelle en reliant les faits aux dimensions :",
         body_style
     ))
-    story.append(Paragraph("- <b>Flux Transactionnel Principal :</b> Lecture de `Ventes Excel` (`ventes_synthese.xlsx`) portant 50 transactions commerciales.", bullet_style))
-    story.append(Paragraph("- <b>Quatre Lookups Dimensionnels MySQL :</b> `Cles clients` (101 clients resolus), `Cles produits` (101 produits resolus), `Cles magasins` (51 magasins resolus) et `Cles des dates` (240 dates resolues).", bullet_style))
-    story.append(Paragraph("- <b>Securite Referentielle Robuste :</b> En cas de reference source orpheline, une condition ternaire Java attribue automatiquement la cle artificielle <code>1</code> (`C_INCONNU`, `P_INCONNU`, etc.), garantissant zero rejet de cle etrangere :", bullet_style))
+    story.append(Paragraph("- <b>Flux Transactionnel :</b> Lecture de <code>ventes_synthese.xlsx</code> portant 50 transactions d'achat avec quantites et prix.", bullet_style))
+    story.append(Paragraph("- <b>Quatre Lookups Dimensionnels MySQL :</b> Resolution en memoire de <code>dim_client</code> (101 lignes), <code>dim_produit</code> (101 lignes), <code>dim_magasin</code> (51 lignes) et <code>dim_temps</code> (240 lignes).", bullet_style))
+    story.append(Paragraph("- <b>Securite Referentielle Robuste :</b> En cas d'identifiant absent, une condition ternaire Java attribue automatiquement la cle artificielle <code>1</code> (`C_INCONNU`, `P_INCONNU`, etc.), garantissant zero rejet de cle etrangere :", bullet_style))
     story.append(Paragraph("<code>id_client_fk = (client != null &amp;&amp; client.id_client_sk &gt; 0) ? client.id_client_sk : 1;</code><br/><code>id_produit_fk = (produit != null &amp;&amp; produit.id_produit_sk &gt; 0) ? produit.id_produit_sk : 1;</code><br/><code>id_magasin_fk = (magasin != null &amp;&amp; magasin.id_magasin_sk &gt; 0) ? magasin.id_magasin_sk : 1;</code>", code_style))
-    story.append(Paragraph("- <b>Calcul des mesures :</b> Calcul precis du montant total de vente (<code>quantite * prix_unitaire</code>) dans `Calc montnat et cles`.", bullet_style))
-    story.append(Paragraph("- <b>Sortie MySQL :</b> Insertion directe dans `fait_ventes`.", bullet_style))
+    story.append(Paragraph("- <b>Mesures et Sortie :</b> Calcul du montant total (<code>quantite * prix_unitaire</code>) et ecriture dans <code>fait_ventes</code>.", bullet_style))
 
-    fait_design = os.path.join(img_dir, 'job_fait_ventes_design.png')
     fait_exec = os.path.join(img_dir, 'job_fait_ventes_exec.jpg')
-    if os.path.exists(fait_design):
-        story.append(Spacer(1, 2))
-        story.append(Image(fait_design, width=440, height=195))
-        story.append(Paragraph("Figure 10 : Conception du Job FaitVente avec 4 lookups dimensionnels convergents.", caption_style))
     if os.path.exists(fait_exec):
-        story.append(Spacer(1, 2))
-        story.append(Image(fait_exec, width=440, height=215))
-        story.append(Paragraph("Figure 11 : Execution reussie du Job FaitVente sous Talaxie (50 ventes chargees, Code de sortie = 0).", caption_style))
+        story.append(Spacer(1, 4))
+        story.append(Image(fait_exec, width=460, height=335))
+        story.append(Paragraph("Figure 6 : Conception et execution reussie du Job FaitVente sous Talaxie Open Studio (50 transactions integrees, [Code de sortie = 0]).", caption_style))
 
     story.append(PageBreak())
 

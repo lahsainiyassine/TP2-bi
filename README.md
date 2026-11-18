@@ -60,16 +60,13 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
 
 ### 4.1 Job 1 : Alimentation de la Dimension Client (`Job_Dim_Client_Ventes`)
 * **Architecture multi-sources :**
-  * Double extraction d'identifiants : `Codes clients Excel` (branche haute) et `Clients dans ventes` (branche basse).
+  * Double extraction d'identifiants : `Codes clients Excel` (depuis `clients_base_50.xlsx`) et `Clients dans ventes` (depuis `ventes_synthese.xlsx`).
   * Unification et deduplication : `Rassembler codes` (`tUnite`, 100 lignes traitees) puis `Codes uniques` (`tUniqRow`).
-  * 3 Lookups convergents dans `Relier clients` (`tMap`) : `Base clients` (Excel), `Clients web CSV` (CSV) et `Fidelite XML` (XML parse avec le moteur Dom4j).
-  * Sortie : Chargement dans `dim_client` sous MySQL avec mapping de la cle de substitution `id_client_sk`.
-
-![Design Job Client](./images/job_dim_client_design.png)
-*Figure 2 : Conception du flux ETL pour la dimension Client (Modele exact de l'enseignant).*
+  * 3 Lookups convergents dans `Relier clients` (`tMap`) : `Base clients` (Excel), `Clients web CSV` (CSV) et `Fidelite XML` (XML parse avec Dom4j).
+  * Sortie : Chargement dans `dim_client` sous MySQL avec mapping de la cle surrogate `id_client_sk`.
 
 ![Execution Job Client](./images/job_dim_client_exec.jpg)
-*Figure 3 : Execution reussie avec 100 lignes traitees et lookups resolus (Code de sortie = 0).*
+*Figure 2 : Conception du flux et execution reussie sous Talaxie (100 lignes traitees, [Code de sortie = 0]).*
 
 ---
 
@@ -80,11 +77,8 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
   * Lookups croises : `Lier produits` (`tMap`) joint `Details catalogue` (Excel) et `Fournisseurs CSV` (CSV) pour adjoindre fournisseur, pays, delai et cout de transport.
   * Sortie : Ecriture dans `dim_produit` sous MySQL.
 
-![Design Job Produit](./images/job_dim_produit_design.png)
-*Figure 4 : Conception du flux ETL pour la dimension Produit.*
-
 ![Execution Job Produit](./images/job_dim_produit_exec.jpg)
-*Figure 5 : Execution reussie avec 100 lignes traitees (Code de sortie = 0).*
+*Figure 3 : Conception du flux et execution reussie sous Talaxie (100 lignes traitees, [Code de sortie = 0]).*
 
 ---
 
@@ -94,11 +88,8 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
   * Lookup de gestion : `Gestoin magasins Excel` (`magasins_ventes (1).xlsx`) apportant surface, CA annuel, effectif et date d'ouverture.
   * Mapping et sortie : `Lier magasins` (`tMap`) consolide les attributs et alimente `dim_magasin` sous MySQL.
 
-![Design Job Magasin](./images/job_dim_magasin_design.png)
-*Figure 6 : Conception du flux pour la dimension Magasin.*
-
 ![Execution Job Magasin](./images/job_dim_magasin_exec.jpg)
-*Figure 7 : Execution reussie avec 50 magasins charges (Code de sortie = 0).*
+*Figure 4 : Conception du flux et execution reussie sous Talaxie (50 magasins charges, [Code de sortie = 0]).*
 
 ---
 
@@ -110,11 +101,8 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
   * Calendrier complet : `Mois et trimestre` (`tMap`) decompte `jour`, `mois`, `nom_mois`, `trimestre`, `semestre`, `annee` et `annee_universitaire`.
   * Sortie : Insertion dans `dim_temps` sous MySQL.
 
-![Design Job Temps](./images/job_dim_temps_design.png)
-*Figure 8 : Architecture du flux temporel multi-sources avec deduplication tUniqRow.*
-
 ![Execution Job Temps](./images/job_dim_temps_exec.jpg)
-*Figure 9 : Execution reussie : 250 dates lues, 240 dates distinctes inserees sans rupture (Code de sortie = 0).*
+*Figure 5 : Conception du flux et execution reussie sous Talaxie (250 lues, 240 uniques inserees, [Code de sortie = 0]).*
 
 ---
 
@@ -126,11 +114,8 @@ L'ensemble des developpements a ete realise dans le projet Talaxie Open Studio n
   * Calculs des mesures : Montant total (`quantite * prix_unitaire`) dans `Calc montnat et clés`.
   * Sortie : Insertion dans `fait_ventes` sous MySQL.
 
-![Design Job Fait Ventes](./images/job_fait_ventes_design.png)
-*Figure 10 : Conception du Job FaitVente avec les 4 lookups dimensionnels convergents.*
-
 ![Execution Job Fait Ventes](./images/job_fait_ventes_exec.jpg)
-*Figure 11 : Execution reussie du Job de Faits : 50 transactions consolidees (Code de sortie = 0).*
+*Figure 6 : Conception du flux et execution reussie sous Talaxie (50 transactions consolidees, [Code de sortie = 0]).*
 
 ---
 
@@ -213,19 +198,14 @@ ETL/
 ├── Rapport_Projet_BI_LAHSAINI_Yassine.pdf     # Rapport academique complet au format PDF
 ├── create_dwh_tables.sql                      # Script SQL de creation du Data Warehouse
 ├── load_data.sql                              # Script de peuplement SQL
-├── build_teacher_jobs.py                      # Generateur automatisé des jobs selon l'architecture exacte
+├── build_teacher_jobs.py                      # Generateur automatisé des jobs ETL
 ├── generate_pdf_report.py                     # Script de generation du rapport PDF academique
 ├── images/                                    # Captures d'ecran des flux et des 5 executions reussies
 │   ├── referentiel_projet.png
-│   ├── job_dim_client_design.png
 │   ├── job_dim_client_exec.jpg
-│   ├── job_dim_produit_design.png
 │   ├── job_dim_produit_exec.jpg
-│   ├── job_dim_magasin_design.png
 │   ├── job_dim_magasin_exec.jpg
-│   ├── job_dim_temps_design.png
 │   ├── job_dim_temps_exec.jpg
-│   ├── job_fait_ventes_design.png
 │   └── job_fait_ventes_exec.jpg
 ├── Etude de cas DW Fichiers Sources/          # Fichiers sources (Excel, CSV, XML)
 └── donnees_transformees/                      # Exports CSV transformes
